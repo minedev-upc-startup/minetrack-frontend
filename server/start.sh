@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+json-server --watch db.json --routes routes.json --port 3000
