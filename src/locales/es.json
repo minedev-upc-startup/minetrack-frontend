@@ -1,0 +1,52 @@
+{
+  "app": {
+    "name": "MineTrack",
+    "tagline": "Alquiler inteligente de maquinaria minera"
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar sesión"
+  },
+  "home": {
+    "title": "Bienvenido a MineTrack",
+    "subtitle": "Plataforma B2B para el alquiler de maquinaria minera pesada."
+  },
+  "about": {
+    "title": "Acerca de MineTrack",
+    "body": "Marketplace de dos lados que conecta a Propietarios de maquinaria minera con Clientes que necesitan alquilar equipos. Las operaciones se apoyan en una capa compartida de telemetría IoT."
+  },
+  "errors": {
+    "occurred": "Ocurrió un error",
+    "forbidden": "No tienes acceso a esta sección",
+    "notFound": "Página no encontrada"
+  },
+  "iam": {
+    "signIn": {
+      "title": "Iniciar sesión",
+      "email": "Correo",
+      "password": "Contraseña",
+      "submit": "Iniciar sesión",
+      "noAccount": "¿Aún no tienes cuenta?",
+      "createOne": "Créala aquí",
+      "invalidCredentials": "Correo o contraseña inválidos"
+    },
+    "signUp": {
+      "title": "Crea tu cuenta",
+      "email": "Correo",
+      "password": "Contraseña",
+      "fullName": "Nombre completo",
+      "phone": "Teléfono",
+      "company": "Empresa",
+      "role": "Rol",
+      "roleOwner": "Soy propietario de maquinaria (Owner)",
+      "roleClient": "Quiero alquilar maquinaria (Client)",
+      "submit": "Crear cuenta",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "signInLink": "Inicia sesión",
+      "duplicateEmail": "Ya existe una cuenta con este correo"
+    }
+  }
+}

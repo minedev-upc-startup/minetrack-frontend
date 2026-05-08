@@ -1,0 +1,92 @@
+/*
+ * MineTrack design tokens.
+ * Source of truth — every color, radius and font in the app should reference
+ * one of these variables. Do not introduce ad-hoc colors in components.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+    /* Brand */
+    --mt-color-primary: #F5A623;
+    --mt-color-primary-hover: #FFB73D;
+    --mt-color-primary-active: #D88E10;
+
+    /* Surfaces */
+    --mt-color-bg-base: #1C1E22;
+    --mt-color-bg-elevated: #25282E;
+    --mt-color-bg-overlay: #2E3239;
+
+    /* Text */
+    --mt-color-text-primary: #F4F5F7;
+    --mt-color-text-secondary: #A8ADB7;
+    --mt-color-text-disabled: #5C6370;
+    --mt-color-text-on-primary: #1C1E22;
+
+    /* Status */
+    --mt-color-status-available: #4CAF50;
+    --mt-color-status-rented: #F5A623;
+    --mt-color-status-maintenance: #E57373;
+    --mt-color-status-pending: #64B5F6;
+
+    /* Strokes */
+    --mt-color-border-subtle: #3A3F47;
+    --mt-color-border-strong: #5C6370;
+
+    /* Radii */
+    --mt-radius-sm: 4px;
+    --mt-radius-md: 8px;
+    --mt-radius-lg: 12px;
+
+    /* Spacing scale */
+    --mt-space-1: 4px;
+    --mt-space-2: 8px;
+    --mt-space-3: 12px;
+    --mt-space-4: 16px;
+    --mt-space-6: 24px;
+    --mt-space-8: 32px;
+
+    /* Typography */
+    --mt-font-display: 'Montserrat', system-ui, sans-serif;
+    --mt-font-body: 'Roboto', system-ui, sans-serif;
+}
+
+html, body, #app {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: var(--mt-color-bg-base);
+    color: var(--mt-color-text-primary);
+    font-family: var(--mt-font-body);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--mt-font-display);
+    color: var(--mt-color-text-primary);
+    margin: 0 0 var(--mt-space-4) 0;
+    line-height: 1.2;
+}
+
+a {
+    color: var(--mt-color-primary);
+    text-decoration: none;
+}
+
+a:hover { color: var(--mt-color-primary-hover); }
+
+.app-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-shell__main {
+    flex: 1;
+    padding: var(--mt-space-6);
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}

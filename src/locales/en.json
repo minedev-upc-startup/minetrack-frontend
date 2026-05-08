@@ -1,0 +1,52 @@
+{
+  "app": {
+    "name": "MineTrack",
+    "tagline": "Smart rental of mining machinery"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out"
+  },
+  "home": {
+    "title": "Welcome to MineTrack",
+    "subtitle": "B2B platform for the rental of heavy mining machinery."
+  },
+  "about": {
+    "title": "About MineTrack",
+    "body": "Two-sided marketplace connecting Owners of mining machinery with Clients that need to rent equipment. Operations are supported by a shared IoT telemetry layer."
+  },
+  "errors": {
+    "occurred": "An error occurred",
+    "forbidden": "You do not have access to this section",
+    "notFound": "Page not found"
+  },
+  "iam": {
+    "signIn": {
+      "title": "Sign in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "noAccount": "No account yet?",
+      "createOne": "Create one",
+      "invalidCredentials": "Invalid email or password"
+    },
+    "signUp": {
+      "title": "Create your account",
+      "email": "Email",
+      "password": "Password",
+      "fullName": "Full name",
+      "phone": "Phone",
+      "company": "Company",
+      "role": "Role",
+      "roleOwner": "I own machinery (Owner)",
+      "roleClient": "I want to rent machinery (Client)",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "duplicateEmail": "An account with this email already exists"
+    }
+  }
+}
