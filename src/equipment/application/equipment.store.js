@@ -1,0 +1,65 @@
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+import { EquipmentApi } from '../infrastructure/equipment-api.js';
+import { MachineAssembler } from '../infrastructure/machine.assembler.js';
+
+const equipmentApi = new EquipmentApi();
+
+/**
+ * Application store for the Equipment bounded context.
+ */
+const useEquipmentStore = defineStore('equipment', () => {
+    const machines = ref([]);
+    const machinesLoaded = ref(false);
+    const errors = ref([]);
+
+    /**
+     * Load machines; pass ownerId to scope fleet to one owner (json-server filter).
+     * @param {{ ownerId?: number }} [filter]
+     */
+    async function fetchMachines(filter = {}) {
+        errors.value = [];
+        try {
+            const response = await equipmentApi.getMachines(filter);
+            machines.value = MachineAssembler.toEntitiesFromListResponse(response);
+            machinesLoaded.value = true;
+        } catch (e) {
+            errors.value.push(e);
+        }
+    }
+
+    /**
+     * @param {import('../domain/machine.entity.js').Machine} machine
+     * @param {Record<string, unknown>} partial
+     */
+    async function patchMachine(machine, partial) {
+        errors.value = [];
+        try {
+            const response = await equipmentApi.patchMachine(machine.id, partial);
+            const updated = MachineAssembler.toEntityFromResource(response.data);
+            const idx = machines.value.findIndex(m => m.id === updated.id);
+            if (idx !== -1) machines.value[idx] = updated;
+            return updated;
+        } catch (e) {
+            errors.value.push(e);
+            return null;
+        }
+    }
+
+    function reset() {
+        machines.value = [];
+        machinesLoaded.value = false;
+        errors.value = [];
+    }
+
+    return {
+        machines,
+        machinesLoaded,
+        errors,
+        fetchMachines,
+        patchMachine,
+        reset
+    };
+});
+
+export default useEquipmentStore;
