@@ -68,6 +68,7 @@ function formatMoney(value) {
 }
 
 function photoSrc(machine) {
+<<<<<<< HEAD
   const p = machine.photos?.[0];
   if (!p || typeof p !== 'string') return null;
   if (p.startsWith('http')) return p;
@@ -76,6 +77,14 @@ function photoSrc(machine) {
   const base = import.meta.env.BASE_URL || '/';
   const path = p.startsWith('/') ? p.slice(1) : p;
   return `${base}${path}`;
+=======
+    const p = machine.photos?.[0];
+    if (!p || typeof p !== 'string') return null;
+    if (p.startsWith('http')) return p;
+    const base = import.meta.env.BASE_URL || '/';
+    const path = p.startsWith('/') ? p.slice(1) : p;
+    return `${base}${path}`;
+>>>>>>> develop
 }
 
 function onImgError(id) {

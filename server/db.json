@@ -99,6 +99,76 @@
       "phone": "+51 999 555 555",
       "company": "Demo Fleet",
       "createdAt": "2026-04-01T08:00:00Z"
+    },
+    {
+      "id": 11,
+      "email": "ops.central@minetrack.app",
+      "password": "password123",
+      "role": "Intermediary",
+      "fullName": "Lucía Vega Torres",
+      "phone": "+51 987 100 100",
+      "company": "MineTrack Operaciones SAC",
+      "createdAt": "2026-03-10T08:00:00Z"
+    },
+    {
+      "id": 12,
+      "email": "fleet.coordinator@minetrack.app",
+      "password": "password123",
+      "role": "Intermediary",
+      "fullName": "Pedro Huamán Quispe",
+      "phone": "+51 987 200 200",
+      "company": "MineTrack Operaciones SAC",
+      "createdAt": "2026-03-18T08:00:00Z"
+    },
+    {
+      "id": 13,
+      "email": "iot.supervisor@minetrack.app",
+      "password": "password123",
+      "role": "Intermediary",
+      "fullName": "Mariana Costa Delgado",
+      "phone": "+51 987 300 300",
+      "company": "MineTrack Monitoreo IoT EIRL",
+      "createdAt": "2026-04-02T08:00:00Z"
+    },
+    {
+      "id": 14,
+      "email": "billing@minetrack.app",
+      "password": "password123",
+      "role": "Intermediary",
+      "fullName": "Ricardo Paredes Lozano",
+      "phone": "+51 987 400 400",
+      "company": "MineTrack Facturación SAC",
+      "createdAt": "2026-04-12T08:00:00Z"
+    },
+    {
+      "id": 15,
+      "email": "users.admin@minetrack.app",
+      "password": "password123",
+      "role": "Intermediary",
+      "fullName": "Andrea Mejía Salas",
+      "phone": "+51 987 500 500",
+      "company": "MineTrack Administración SAC",
+      "createdAt": "2026-04-20T08:00:00Z"
+    },
+    {
+      "id": 16,
+      "email": "cliente.demo@minetrack.app",
+      "password": "password123",
+      "role": "Client",
+      "fullName": "Demo Cliente",
+      "phone": "+51 988 600 600",
+      "company": "Cliente Demo SAC",
+      "createdAt": "2026-05-01T08:00:00Z"
+    },
+    {
+      "id": 17,
+      "email": "propietario.demo@minetrack.app",
+      "password": "password123",
+      "role": "Owner",
+      "fullName": "Demo Propietario",
+      "phone": "+51 999 666 666",
+      "company": "Flota Demo SAC",
+      "createdAt": "2026-05-02T08:00:00Z"
     }
   ],
   "machines": [

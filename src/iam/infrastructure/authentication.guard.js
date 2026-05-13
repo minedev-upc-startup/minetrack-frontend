@@ -1,3 +1,4 @@
+import { unref } from 'vue';
 import useIamStore from '../application/iam.store.js';
 
 /**
@@ -15,5 +16,5 @@ import useIamStore from '../application/iam.store.js';
 export function authenticationGuard(to) {
     if (!to.meta?.requiresAuth) return true;
     const iam = useIamStore();
-    return iam.isSignedIn;
+    return Boolean(unref(iam.isSignedIn));
 }
