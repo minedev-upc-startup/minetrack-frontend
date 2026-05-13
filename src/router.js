@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import iamRoutes from './iam/presentation/iam-routes.js';
 import { authenticationGuard } from './iam/infrastructure/authentication.guard.js';
 import { roleGuard } from './shared/infrastructure/role-guard.js';
-
+import dashboardRoutes from './dashboard/presentation/dashboard-routes.js';
 // Lazy-loaded shared views
 const home = () => import('./shared/presentation/views/home.vue');
 const about = () => import('./shared/presentation/views/about.vue');
@@ -28,7 +28,7 @@ const routes = [
     // TODO(teammate-machinery):  { path: '/catalog',     name: 'catalog',     children: catalogRoutes },
     // TODO(teammate-rentals):    { path: '/rentals',     name: 'rentals',     children: rentalsRoutes },
     // TODO(teammate-iot):        { path: '/iot',         name: 'iot',         children: iotRoutes },
-    // TODO(teammate-dashboards): { path: '/dashboard',   name: 'dashboard',   children: dashboardRoutes },
+    { path: '/dashboard',   name: 'dashboard',   children: dashboardRoutes },
     // TODO(teammate-reviews):    { path: '/reviews',     name: 'reviews',     children: reviewsRoutes },
 
     { path: '/',                redirect: '/home' },
