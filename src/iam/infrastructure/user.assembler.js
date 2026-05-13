@@ -1,4 +1,5 @@
 import { User } from '../domain/user.entity.js';
+import { normalizeAppRole } from '../../shared/infrastructure/user-role.js';
 
 /**
  * Maps user resources from the API into User domain entities.
@@ -11,11 +12,12 @@ export class UserAssembler {
      * @returns {User}
      */
     static toEntityFromResource(resource) {
+        const role = normalizeAppRole(resource.role) ?? 'Client';
         return new User({
             id: resource.id,
             email: resource.email,
             fullName: resource.fullName,
-            role: resource.role,
+            role,
             phone: resource.phone,
             company: resource.company
         });

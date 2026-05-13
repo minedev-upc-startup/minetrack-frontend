@@ -8,7 +8,7 @@ export class User {
      * @param {?number} [params.id=null]
      * @param {string} [params.email='']
      * @param {string} [params.fullName='']
-     * @param {string} [params.role='Client']  - "Owner" | "Client"
+     * @param {string} [params.role='Client']  - "Owner" | "Client" | "Intermediary"
      * @param {string} [params.phone='']
      * @param {string} [params.company='']
      */

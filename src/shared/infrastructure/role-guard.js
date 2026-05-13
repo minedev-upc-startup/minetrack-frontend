@@ -1,4 +1,6 @@
+import { unref } from 'vue';
 import useIamStore from '../../iam/application/iam.store.js';
+import { normalizeAppRole } from './user-role.js';
 
 /**
  * Route role guard.
@@ -18,7 +20,7 @@ export function roleGuard(to) {
     if (!requiredRoles || requiredRoles.length === 0) return true;
 
     const iam = useIamStore();
-    const currentRole = iam.currentUserRole;
+    const currentRole = normalizeAppRole(unref(iam.currentUserRole));
     if (!currentRole) return false;
     return requiredRoles.includes(currentRole);
 }

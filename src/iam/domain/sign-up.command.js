@@ -8,7 +8,7 @@ export class SignUpCommand {
      * @param {string} params.email
      * @param {string} params.password
      * @param {string} params.fullName
-     * @param {string} params.role - "Owner" | "Client"
+     * @param {string} params.role - "Owner" | "Client" | "Intermediary"
      * @param {string} [params.phone='']
      * @param {string} [params.company='']
      */

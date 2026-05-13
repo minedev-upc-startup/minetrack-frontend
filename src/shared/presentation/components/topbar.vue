@@ -5,6 +5,16 @@ import { useRouter } from 'vue-router';
 import LanguageSwitcher from './language-switcher.vue';
 import useIamStore from '../../../iam/application/iam.store.js';
 
+defineProps({
+  /** When true, shows a hamburger control that collapses the role dashboard sidebar. */
+  showNavToggle: {
+    type: Boolean,
+    default: false
+  }
+});
+
+defineEmits(['toggle-nav']);
+
 const { t } = useI18n();
 const router = useRouter();
 const iam = useIamStore();
@@ -20,6 +30,18 @@ const onSignOut = () => {
 
 <template>
   <header class="topbar">
+    <pv-button
+        v-if="showNavToggle"
+        v-tooltip.bottom="t('nav.toggleSidebar')"
+        type="button"
+        icon="pi pi-bars"
+        severity="secondary"
+        text
+        rounded
+        :aria-label="t('nav.toggleSidebar')"
+        class="topbar__menu"
+        @click="$emit('toggle-nav')"
+    />
     <router-link :to="{ name: 'home' }" class="topbar__brand">
       {{ t('app.name') }}
     </router-link>
@@ -54,6 +76,9 @@ const onSignOut = () => {
   border-bottom: 1px solid var(--mt-color-border-subtle);
   height: 56px;
   box-sizing: border-box;
+}
+.topbar__menu {
+  flex-shrink: 0;
 }
 .topbar__brand {
   font-family: var(--mt-font-display);
