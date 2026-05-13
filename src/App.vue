@@ -45,5 +45,48 @@
   border-bottom: 1px solid var(--mt-color-border-subtle);
 }
 
+.app-shell__brand {
+  font-family: var(--mt-font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--mt-color-primary);
+}
+
+.app-shell__nav,
+.app-shell__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--mt-space-4);
+}
+
+.app-shell__nav {
+  flex: 1;
+}
+
+.app-shell__nav a,
+.app-shell__actions a {
+  color: var(--mt-color-text-secondary);
+}
+
+.app-shell__main {
+  flex: 1;
+  padding: var(--mt-space-6);
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.app-shell__footer {
+  display: flex;
+  justify-content: center;
+  gap: var(--mt-space-2);
+  padding: var(--mt-space-4) var(--mt-space-6);
+  color: var(--mt-color-text-secondary);
+  border-top: 1px solid var(--mt-color-border-subtle);
+  background: var(--mt-color-bg-elevated);
+}
+</style>
+
 
 
