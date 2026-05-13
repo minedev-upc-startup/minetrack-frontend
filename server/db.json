@@ -182,7 +182,7 @@
       "year": 2022,
       "hourlyRate": 180,
       "dailyMinimumHours": 8,
-      "status": "Under Maintenance",
+      "status": "Available",
       "photos": [
         "/seed/machines/cat-320-1.jpg"
       ],
@@ -229,7 +229,7 @@
       "year": 2023,
       "hourlyRate": 210,
       "dailyMinimumHours": 8,
-      "status": "Under Maintenance",
+      "status": "Available",
       "photos": [
         "/seed/machines/volvo-l120.jpg"
       ],
@@ -251,7 +251,7 @@
       "year": 2022,
       "hourlyRate": 295,
       "dailyMinimumHours": 8,
-      "status": "Rented",
+      "status": "Available",
       "photos": [
         "/seed/machines/hitachi-zx490.jpg"
       ],
@@ -364,7 +364,7 @@
       "year": 2024,
       "hourlyRate": 480,
       "dailyMinimumHours": 8,
-      "status": "Rented",
+      "status": "Available",
       "photos": [
         "/seed/machines/liebherr-r9100.jpg"
       ],
