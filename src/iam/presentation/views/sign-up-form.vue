@@ -20,7 +20,8 @@ const form = ref({
 
 const roleOptions = computed(() => [
   { label: t('iam.signUp.roleOwner'), value: 'Owner' },
-  { label: t('iam.signUp.roleClient'), value: 'Client' }
+  { label: t('iam.signUp.roleClient'), value: 'Client' },
+  { label: t('iam.signUp.roleIntermediary'), value: 'Intermediary' }
 ]);
 
 const errorMessages = computed(() => iam.errors.map(e => t(e.message) === e.message ? e.message : t(e.message)));
