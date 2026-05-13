@@ -31,6 +31,7 @@ const onSignOut = () => {
       <nav class="app-shell__nav">
         <router-link :to="{ name: 'home' }">{{ t('nav.home') }}</router-link>
         <router-link :to="{ name: 'about' }">{{ t('nav.about') }}</router-link>
+        <router-link :to="{ name: 'catalog-list' }">Catálogo</router-link>
       </nav>
 
       <div class="app-shell__actions">

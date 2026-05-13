@@ -7,10 +7,10 @@ Teammates own one bounded context end-to-end: domain, application, infrastructur
 
 1. **Copy this folder** under `src/`, renaming it to your context (`catalog/`, `rentals/`, `iot/`, ...).
 2. **Rename the placeholder files**:
-   - `example.entity.js` → your real entity (e.g., `machine.entity.js`)
-   - `_template-api.js`  → e.g., `catalog-api.js`
-   - `_template.store.js` → e.g., `catalog.store.js`
-   - `_template-routes.js` → e.g., `catalog-routes.js`
+   - `machine.entity.js` → your real entity (e.g., `machine.entity.js`)
+   - `catalog-api.js`  → e.g., `catalog-api.js`
+   - `catalog.store.js` → e.g., `catalog.store.js`
+   - `catalog-routes.js` → e.g., `catalog-routes.js`
    - `example-list.vue`, `example-form.vue` → e.g., `machine-list.vue`, `machine-form.vue`
 3. **Add a route entry** in `src/router.js` so your context is reachable:
    ```js
