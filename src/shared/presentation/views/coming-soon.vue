@@ -1,15 +1,25 @@
 <script setup>
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
+const { t } = useI18n();
+
+const heading = computed(() => {
+    const key = route.meta.titleKey;
+    if (key) return t(key);
+    return route.meta.title ?? '';
+});
+
+const hint = computed(() => t('common.comingSoonHint'));
 </script>
 
 <template>
   <section class="coming-soon">
-    <h1>{{ route.meta.title }}</h1>
+    <h1>{{ heading }}</h1>
     <p class="coming-soon__hint">
-      This view is reserved for the bounded context owner.
-      Replace this placeholder with the real implementation.
+      {{ hint }}
     </p>
   </section>
 </template>
