@@ -13,6 +13,9 @@ const comingSoon = () => import('./shared/presentation/views/coming-soon.vue');
 const catalogView = () => import('./equipment/presentation/views/catalog-view.vue');
 const ownerMachinesView = () => import('./equipment/presentation/views/owner-machines-view.vue');
 const profileView = () => import('./shared/presentation/views/profile-view.vue');
+const clientRequestsView = () => import('./rentals/presentation/views/client-requests-view.vue');
+const ownerRentalsView = () => import('./rentals/presentation/views/owner-rentals-view.vue');
+const dashboardOverview = () => import('./dashboard/presentation/views/dashboard-overview.vue');
 
 const dashboardMeta = (roles, titleKey) => ({
     layout: 'dashboard',
@@ -32,13 +35,13 @@ const routes = [
     {
         path: '/client/dashboard',
         name: 'client-dashboard',
-        component: comingSoon,
+        component: dashboardOverview,
         meta: dashboardMeta(['Client'], 'nav.clientDashboard')
     },
     {
         path: '/client/my-requests',
         name: 'client-my-requests',
-        component: comingSoon,
+        component: clientRequestsView,
         meta: dashboardMeta(['Client'], 'nav.clientMyRequests')
     },
     {
@@ -58,7 +61,7 @@ const routes = [
     {
         path: '/owner/active-rentals',
         name: 'owner-active-rentals',
-        component: comingSoon,
+        component: ownerRentalsView,
         meta: dashboardMeta(['Owner'], 'nav.ownerActiveRentals')
     },
     {
@@ -84,7 +87,7 @@ const routes = [
     {
         path: '/intermediary/dashboard',
         name: 'intermediary-dashboard',
-        component: comingSoon,
+        component: dashboardOverview,
         meta: dashboardMeta(['Intermediary'], 'nav.intermediaryOperationalPanel')
     },
     {

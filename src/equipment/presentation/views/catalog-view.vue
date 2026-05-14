@@ -1,10 +1,38 @@
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast'; // <-- Para la alerta verde
 import useEquipmentStore from '../../application/equipment.store.js';
+import useIamStore from '../../../iam/application/iam.store.js'; // <-- Para saber el rol
+import useRentalsStore from '../../../rentals/application/rentals.store.js';
+
 
 const { t } = useI18n();
 const equipment = useEquipmentStore();
+
+const toast = useToast();
+const iam = useIamStore();
+const rentals = useRentalsStore();
+
+async function requestMachine(machine) {
+  const success = await rentals.submitRequest(machine.id, iam.currentUserId, machine.ownerId);
+
+  if (success) {
+    toast.add({
+      severity: 'success',
+      summary: 'Solicitud enviada',
+      detail: `Tu solicitud ha sido enviada al propietario.`,
+      life: 4000
+    });
+  } else {
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'No se pudo enviar la solicitud.',
+      life: 4000
+    });
+  }
+}
 
 const activeChip = ref('all');
 const page = ref(1);
@@ -68,12 +96,14 @@ function formatMoney(value) {
 }
 
 function photoSrc(machine) {
-    const p = machine.photos?.[0];
-    if (!p || typeof p !== 'string') return null;
-    if (p.startsWith('http')) return p;
-    const base = import.meta.env.BASE_URL || '/';
-    const path = p.startsWith('/') ? p.slice(1) : p;
-    return `${base}${path}`;
+  const p = machine.photos?.[0];
+  if (!p || typeof p !== 'string') return null;
+  if (p.startsWith('http')) return p;
+
+
+  const base = import.meta.env.BASE_URL || '/';
+  const path = p.startsWith('/') ? p.slice(1) : p;
+  return `${base}${path}`;
 }
 
 function onImgError(id) {
@@ -99,8 +129,10 @@ function goPage(p) {
 
 <template>
   <section class="catalog-view">
+    <pv-toast />
     <h1 class="catalog-view__title">{{ t('equipment.catalogTitle') }}</h1>
     <p class="catalog-view__intro">{{ t('equipment.catalogIntro') }}</p>
+
 
     <div class="catalog-view__toolbar">
       <div class="catalog-view__chips" role="tablist" :aria-label="t('equipment.catalogFiltersAria')">
@@ -173,6 +205,7 @@ function goPage(p) {
             <span class="machine-card__price-value">{{ formatMoney(m.hourlyRate) }}</span>
             <span class="machine-card__price-suffix">{{ t('equipment.perHour') }}</span>
           </p>
+
           <div class="machine-card__swatches" role="group" :aria-label="t('equipment.colorVariantsAria')">
             <button
                 type="button"
@@ -199,6 +232,16 @@ function goPage(p) {
                 @click="setVariant(m.id, 'slate')"
             />
           </div>
+
+          <pv-button
+              v-if="iam.currentUserRole === 'Client'"
+              label="Solicitar alquiler"
+              icon="pi pi-calendar-plus"
+              class="w-full mt-3"
+              :disabled="m.status !== 'Available'"
+              @click="requestMachine(m)"
+          />
+
         </div>
       </article>
     </div>
