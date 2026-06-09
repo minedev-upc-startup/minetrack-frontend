@@ -561,6 +561,16 @@
       "submittedAt": "2026-05-14T00:28:15.607Z",
       "id": 9,
       "resolvedAt": "2026-05-14T00:50:19.944Z"
+    },
+    {
+      "machineId": 4,
+      "clientId": 5,
+      "ownerId": 2,
+      "startDate": "2026-06-09",
+      "endDate": "2026-12-31",
+      "status": "Pending",
+      "submittedAt": "2026-06-09T19:09:12.167Z",
+      "id": 10
     }
   ],
   "rentals": [
