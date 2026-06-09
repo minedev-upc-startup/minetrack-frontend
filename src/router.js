@@ -17,11 +17,12 @@ const clientRequestsView = () => import('./rentals/presentation/views/client-req
 const ownerRentalsView = () => import('./rentals/presentation/views/owner-rentals-view.vue');
 const dashboardOverview = () => import('./dashboard/presentation/views/dashboard-overview.vue');
 
-const dashboardMeta = (roles, titleKey) => ({
+const dashboardMeta = (roles, titleKey, extra = {}) => ({
     layout: 'dashboard',
     requiresAuth: true,
     roles,
-    titleKey
+    titleKey,
+    ...extra
 });
 
 const routes = [
@@ -29,7 +30,7 @@ const routes = [
     { path: '/about', name: 'about', component: about, meta: { titleKey: 'nav.about' } },
     { path: '/forbidden', name: 'forbidden', component: forbidden, meta: { titleKey: 'errors.forbidden' } },
 
-    { path: '/iam', name: 'iam', children: iamRoutes },
+    { path: '/iam', name: 'iam', component: () => import('./iam/presentation/iam-shell.vue'), children: iamRoutes },
 
     // Client
     {
@@ -48,10 +49,16 @@ const routes = [
         path: '/client/catalog',
         name: 'client-catalog',
         component: catalogView,
-        meta: dashboardMeta(['Client'], 'nav.catalog')
+        meta: dashboardMeta(['Client'], 'nav.catalog', { catalogShell: true })
     },
 
     // Owner
+    {
+        path: '/owner/dashboard',
+        name: 'owner-dashboard',
+        component: dashboardOverview,
+        meta: dashboardMeta(['Owner'], 'nav.ownerDashboard')
+    },
     {
         path: '/owner/machines',
         name: 'owner-machines',
@@ -94,7 +101,7 @@ const routes = [
         path: '/intermediary/catalog',
         name: 'intermediary-catalog',
         component: catalogView,
-        meta: dashboardMeta(['Intermediary'], 'nav.catalog')
+        meta: dashboardMeta(['Intermediary'], 'nav.catalog', { catalogShell: true })
     },
     {
         path: '/intermediary/requests',
