@@ -192,7 +192,7 @@
       "year": 2022,
       "hourlyRate": 180,
       "dailyMinimumHours": 8,
-      "status": "Under Maintenance",
+      "status": "Rented",
       "photos": [
         "/seed/machines/cat-320-1.jpg"
       ],
@@ -217,7 +217,7 @@
       "year": 2021,
       "hourlyRate": 165,
       "dailyMinimumHours": 8,
-      "status": "Rented",
+      "status": "Available",
       "photos": [
         "/seed/machines/komatsu-pc210.jpg"
       ],
@@ -239,7 +239,7 @@
       "year": 2023,
       "hourlyRate": 210,
       "dailyMinimumHours": 8,
-      "status": "Under Maintenance",
+      "status": "Rented",
       "photos": [
         "/seed/machines/volvo-l120.jpg"
       ],
@@ -581,6 +581,17 @@
       "status": "Pending",
       "submittedAt": "2026-06-09T19:09:12.167Z",
       "id": 10
+    },
+    {
+      "machineId": 3,
+      "clientId": 5,
+      "ownerId": 1,
+      "startDate": "2026-06-15",
+      "endDate": "2026-12-31",
+      "status": "Approved",
+      "submittedAt": "2026-06-15T05:55:08.567Z",
+      "id": 11,
+      "resolvedAt": "2026-06-15T05:55:30.965Z"
     }
   ],
   "rentals": [

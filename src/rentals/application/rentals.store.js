@@ -47,7 +47,20 @@ const useRentalsStore = defineStore('rentals', () => {
         }
     }
 
-    return { requests, fetchRequests, submitRequest, updateRequestStatus };
+    async function acceptRental(id) {
+        const apiStatus = 'Approved';
+        const success = await updateRequestStatus(id, apiStatus);
+        if (!success) return false;
+        const index = requests.value.findIndex(r => r.id === id);
+        if (index !== -1) requests.value[index].status = 'Active';
+        return true;
+    }
+
+    async function rejectRental(id) {
+        return updateRequestStatus(id, 'Rejected');
+    }
+
+    return { requests, fetchRequests, submitRequest, updateRequestStatus, acceptRental, rejectRental };
 });
 
 export default useRentalsStore;
