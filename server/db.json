@@ -169,6 +169,16 @@
       "phone": "+51 999 666 666",
       "company": "Flota Demo SAC",
       "createdAt": "2026-05-02T08:00:00Z"
+    },
+    {
+      "id": 18,
+      "email": "techsupport@minetrack.app",
+      "password": "password123",
+      "role": "maintenance",
+      "fullName": "Taller Komatsu",
+      "phone": "+51 987 600 600",
+      "company": "Taller Komatsu SAC",
+      "createdAt": "2026-06-01T08:00:00Z"
     }
   ],
   "machines": [
@@ -182,7 +192,7 @@
       "year": 2022,
       "hourlyRate": 180,
       "dailyMinimumHours": 8,
-      "status": "Available",
+      "status": "Under Maintenance",
       "photos": [
         "/seed/machines/cat-320-1.jpg"
       ],
@@ -207,7 +217,7 @@
       "year": 2021,
       "hourlyRate": 165,
       "dailyMinimumHours": 8,
-      "status": "Available",
+      "status": "Rented",
       "photos": [
         "/seed/machines/komatsu-pc210.jpg"
       ],
@@ -229,7 +239,7 @@
       "year": 2023,
       "hourlyRate": 210,
       "dailyMinimumHours": 8,
-      "status": "Available",
+      "status": "Under Maintenance",
       "photos": [
         "/seed/machines/volvo-l120.jpg"
       ],

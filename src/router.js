@@ -140,6 +140,14 @@ const routes = [
         meta: dashboardMeta(['Intermediary'], 'nav.intermediaryUsers')
     },
 
+    // Maintenance workshop
+    {
+        path: '/maintenance/dashboard',
+        name: 'maintenance-dashboard',
+        component: comingSoon,
+        meta: dashboardMeta(['Maintenance'], 'nav.dashboard')
+    },
+
     { path: '/', redirect: '/home' },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: pageNotFound, meta: { titleKey: 'errors.notFound' } }
 ];

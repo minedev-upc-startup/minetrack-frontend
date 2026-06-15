@@ -1,6 +1,13 @@
-/** @typedef {'Client' | 'Owner' | 'Intermediary'} AppRole */
+/** @typedef {'Client' | 'Owner' | 'Intermediary' | 'Maintenance'} AppRole */
 
-export const APP_ROLES = ['Client', 'Owner', 'Intermediary'];
+export const USER_ROLES = {
+    CLIENT: 'Client',
+    OWNER: 'Owner',
+    INTERMEDIARY: 'Intermediary',
+    MAINTENANCE: 'maintenance'
+};
+
+export const APP_ROLES = ['Client', 'Owner', 'Intermediary', 'Maintenance'];
 
 /**
  * Maps API / persisted role strings to canonical app roles (case-insensitive).
