@@ -22,7 +22,7 @@ function toggleSidebar() {
 
 <template>
   <div class="dashboard-layout" :class="{ 'dashboard-layout--catalog': isCatalogShell }">
-    <Topbar :show-nav-toggle="!isCatalogShell" :light="isCatalogShell" @toggle-nav="toggleSidebar" />
+    <Topbar :show-nav-toggle="!isCatalogShell" @toggle-nav="toggleSidebar" />
     <div class="dashboard-layout__body">
       <DashboardSidebar
           v-if="!isCatalogShell"
@@ -44,10 +44,6 @@ function toggleSidebar() {
   background: #0f172a;
 }
 
-.dashboard-layout--catalog {
-  background: #ffffff;
-}
-
 .dashboard-layout__body {
   flex: 1;
   display: flex;
@@ -64,6 +60,5 @@ function toggleSidebar() {
 
 .dashboard-layout--catalog .dashboard-layout__main {
   padding: 24px 40px 48px;
-  background: #ffffff;
 }
 </style>

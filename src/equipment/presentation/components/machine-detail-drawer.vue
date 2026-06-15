@@ -38,6 +38,17 @@ function formatRate(value) {
   if (value == null) return '—';
   return `S/ ${Number(value).toLocaleString('es-PE')}`;
 }
+
+function machineTypeIcon(type) {
+  const icons = {
+    Excavator: 'pi pi-cog',
+    'Front Loader': 'pi pi-box',
+    'Dump Truck': 'pi pi-truck',
+    Drill: 'pi pi-bolt',
+    Tractor: 'pi pi-sliders-h'
+  };
+  return icons[type] || 'pi pi-wrench';
+}
 </script>
 
 <template>
@@ -52,7 +63,8 @@ function formatRate(value) {
       <div class="machine-drawer__media">
         <img v-if="photo" :src="photo" :alt="displayName" class="machine-drawer__img" />
         <div v-else class="machine-drawer__placeholder">
-          <i class="pi pi-image" />
+          <i :class="machineTypeIcon(machine.type)" />
+          <span>{{ machine.type }}</span>
         </div>
       </div>
 
@@ -107,8 +119,12 @@ function formatRate(value) {
 .machine-drawer__media {
   border-radius: 14px;
   overflow: hidden;
-  background: #f3f4f6;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(245, 166, 35, 0.12), transparent 45%),
+    linear-gradient(145deg, #111827 0%, #1e293b 55%, #0f172a 100%);
   aspect-ratio: 16 / 10;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .machine-drawer__img {
@@ -121,10 +137,24 @@ function formatRate(value) {
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
+  gap: 10px;
+  color: #94a3b8;
+}
+
+.machine-drawer__placeholder i {
   font-size: 42px;
+  color: var(--mt-color-primary);
+}
+
+.machine-drawer__placeholder span {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
 }
 
 .machine-drawer__meta {
@@ -160,7 +190,7 @@ function formatRate(value) {
   margin: 0;
   font-size: 24px;
   font-weight: 700;
-  color: #111827;
+  color: var(--mt-color-primary);
 }
 
 .machine-drawer__rate span {

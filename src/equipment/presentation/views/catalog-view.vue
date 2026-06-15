@@ -109,6 +109,17 @@ function onImgError(id) {
   imageFailed[id] = true;
 }
 
+function machineTypeIcon(type) {
+  const icons = {
+    Excavator: 'pi pi-cog',
+    'Front Loader': 'pi pi-box',
+    'Dump Truck': 'pi pi-truck',
+    Drill: 'pi pi-bolt',
+    Tractor: 'pi pi-sliders-h'
+  };
+  return icons[type] || 'pi pi-wrench';
+}
+
 function isFeatured(index) {
   return index < 2;
 }
@@ -253,17 +264,21 @@ function goPage(nextPage) {
           @keyup.enter="openMachine(machine)"
       >
         <div class="machine-card__media">
-          <img
-              v-if="photoSrc(machine) && !imageFailed[machine.id]"
-              class="machine-card__img"
-              :src="photoSrc(machine)"
-              :alt="displayName(machine)"
-              loading="lazy"
-              @error="onImgError(machine.id)"
-          >
-          <div v-else class="machine-card__placeholder" aria-hidden="true">
-            <i class="pi pi-image" />
+          <div class="machine-card__media-frame">
+            <img
+                v-if="photoSrc(machine) && !imageFailed[machine.id]"
+                class="machine-card__img"
+                :src="photoSrc(machine)"
+                :alt="displayName(machine)"
+                loading="lazy"
+                @error="onImgError(machine.id)"
+            >
+            <div v-else class="machine-card__placeholder" aria-hidden="true">
+              <i :class="machineTypeIcon(machine.type)" />
+              <span>{{ machine.type }}</span>
+            </div>
           </div>
+          <span class="machine-card__type">{{ machine.type }}</span>
           <span
               v-if="machine.status !== 'Available'"
               class="machine-card__status"
@@ -274,7 +289,10 @@ function goPage(nextPage) {
         </div>
         <div class="machine-card__body">
           <h2 class="machine-card__name">{{ displayName(machine) }}</h2>
-          <p class="machine-card__price">{{ formatRate(machine.hourlyRate) }}{{ t('equipment.perHour') }}</p>
+          <p class="machine-card__price">
+            <span class="machine-card__price-value">{{ formatRate(machine.hourlyRate) }}</span>
+            <span class="machine-card__price-unit">{{ t('equipment.perHour') }}</span>
+          </p>
         </div>
       </article>
     </div>
@@ -314,7 +332,7 @@ function goPage(nextPage) {
 <style scoped>
 .catalog-view {
   min-height: 100%;
-  color: #111827;
+  color: var(--mt-color-text-primary);
 }
 
 .catalog-view__toolbar {
@@ -329,7 +347,7 @@ function goPage(nextPage) {
 .catalog-view__filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
 }
 
 .catalog-filter {
@@ -339,24 +357,29 @@ function goPage(nextPage) {
 .catalog-filter__btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  border: none;
+  gap: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 999px;
-  padding: 12px 20px;
-  background: var(--mt-color-primary);
-  color: #ffffff;
-  font-size: 14px;
+  padding: 10px 16px;
+  background: rgba(148, 163, 184, 0.06);
+  color: #cbd5e1;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: filter 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
-.catalog-filter__btn:hover {
-  filter: brightness(1.05);
+.catalog-filter__btn:hover,
+.catalog-filter__btn:focus-visible {
+  border-color: rgba(245, 166, 35, 0.45);
+  background: rgba(245, 166, 35, 0.12);
+  color: #fde68a;
+  outline: none;
 }
 
 .catalog-filter__btn i {
-  font-size: 11px;
+  font-size: 10px;
+  opacity: 0.8;
 }
 
 .catalog-filter__menu {
@@ -367,9 +390,9 @@ function goPage(nextPage) {
   min-width: 180px;
   padding: 8px;
   border-radius: 14px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  background: #111827;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 }
 
 .catalog-filter__option {
@@ -380,7 +403,7 @@ function goPage(nextPage) {
   text-align: left;
   padding: 10px 12px;
   border-radius: 10px;
-  color: #374151;
+  color: #cbd5e1;
   font-size: 14px;
   cursor: pointer;
 }
@@ -388,12 +411,12 @@ function goPage(nextPage) {
 .catalog-filter__option:hover,
 .catalog-filter__option--active {
   background: rgba(245, 166, 35, 0.12);
-  color: #92400e;
+  color: #fde68a;
 }
 
 .catalog-view__count {
   margin: 0;
-  color: #6b7280;
+  color: #94a3b8;
   font-size: 14px;
   white-space: nowrap;
 }
@@ -405,13 +428,16 @@ function goPage(nextPage) {
   justify-content: center;
   gap: 10px;
   min-height: 280px;
-  color: #6b7280;
+  color: #94a3b8;
+  border-radius: 16px;
+  border: 1px dashed rgba(148, 163, 184, 0.18);
+  background: rgba(26, 34, 52, 0.45);
 }
 
 .catalog-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 22px;
+  gap: 20px;
   margin-bottom: 36px;
 }
 
@@ -420,8 +446,11 @@ function goPage(nextPage) {
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  border-radius: 0;
-  transition: transform 0.15s ease;
+  border-radius: 14px;
+  background: #1a2234;
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  overflow: hidden;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .machine-card--featured {
@@ -431,18 +460,29 @@ function goPage(nextPage) {
 .machine-card:hover,
 .machine-card:focus-visible {
   transform: translateY(-3px);
+  border-color: rgba(245, 166, 35, 0.35);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
   outline: none;
 }
 
 .machine-card__media {
   position: relative;
-  overflow: hidden;
-  border-radius: 4px;
-  background: #f3f4f6;
-  aspect-ratio: 16 / 10;
+  padding: 12px 12px 0;
 }
 
-.machine-card--featured .machine-card__media {
+.machine-card__media-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(245, 166, 35, 0.12), transparent 45%),
+    linear-gradient(145deg, #111827 0%, #1e293b 55%, #0f172a 100%);
+  aspect-ratio: 16 / 10;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.machine-card--featured .machine-card__media-frame {
   aspect-ratio: 16 / 9;
 }
 
@@ -455,71 +495,128 @@ function goPage(nextPage) {
 }
 
 .machine-card:hover .machine-card__img {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 .machine-card__placeholder {
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
-  font-size: 42px;
+  gap: 10px;
+  color: #94a3b8;
+}
+
+.machine-card__placeholder i {
+  font-size: 38px;
+  color: var(--mt-color-primary);
+  opacity: 0.85;
+}
+
+.machine-card--featured .machine-card__placeholder i {
+  font-size: 48px;
+}
+
+.machine-card__placeholder span {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.machine-card__type {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(15, 23, 42, 0.82);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  color: #e2e8f0;
+  backdrop-filter: blur(6px);
 }
 
 .machine-card__status {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 22px;
+  right: 22px;
   padding: 6px 10px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  backdrop-filter: blur(6px);
 }
 
-.machine-card__status--Rented { color: #b45309; }
-.machine-card__status--UnderMaintenance { color: #b91c1c; }
+.machine-card__status--Rented { color: #fde68a; border-color: rgba(245, 166, 35, 0.35); }
+.machine-card__status--UnderMaintenance { color: #fecaca; border-color: rgba(239, 68, 68, 0.35); }
 
 .machine-card__body {
-  padding: 14px 2px 0;
+  padding: 16px 18px 18px;
 }
 
 .machine-card__name {
-  margin: 0 0 4px;
+  margin: 0 0 8px;
   font-family: var(--mt-font-display);
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
-  color: #111827;
+  color: #f8fafc;
 }
 
 .machine-card--featured .machine-card__name {
-  font-size: 22px;
+  font-size: 21px;
 }
 
 .machine-card__price {
   margin: 0;
-  color: #6b7280;
-  font-size: 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.machine-card__price-value {
+  color: var(--mt-color-primary);
+  font-family: var(--mt-font-display);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.machine-card--featured .machine-card__price-value {
+  font-size: 17px;
+}
+
+.machine-card__price-unit {
+  color: #94a3b8;
+  font-size: 13px;
 }
 
 .catalog-pagination {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .catalog-pagination__page {
   border: none;
   background: transparent;
-  color: #9ca3af;
+  color: #64748b;
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
   padding: 0;
   min-width: 28px;
+  transition: color 0.15s ease;
+}
+
+.catalog-pagination__page:hover {
+  color: #cbd5e1;
 }
 
 .catalog-pagination__page--active {
@@ -527,21 +624,27 @@ function goPage(nextPage) {
   height: 36px;
   border-radius: 50%;
   background: var(--mt-color-primary);
-  color: #ffffff;
+  color: var(--mt-color-text-on-primary);
   font-weight: 700;
 }
 
 .catalog-pagination__next {
   width: 36px;
   height: 36px;
-  border: none;
+  border: 1px solid rgba(245, 166, 35, 0.35);
   border-radius: 50%;
-  background: var(--mt-color-primary);
-  color: #ffffff;
+  background: rgba(245, 166, 35, 0.12);
+  color: var(--mt-color-primary);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.catalog-pagination__next:hover:not(:disabled) {
+  background: rgba(245, 166, 35, 0.22);
+  border-color: rgba(245, 166, 35, 0.55);
 }
 
 .catalog-pagination__next:disabled {
