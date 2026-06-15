@@ -127,6 +127,32 @@
     "viewIotStatus": "Ver estado IoT",
     "dateRange": "{start} → {end}"
   },
+  "earnings": {
+    "title": "Ganancias financieras",
+    "intro": "Ingresos en tiempo real calculados desde tus contratos de alquiler aprobados y activos.",
+    "liveData": "Datos en vivo del store de alquileres",
+    "loading": "Cargando datos financieros...",
+    "totalGross": "Ganancias brutas totales",
+    "totalGrossHint": "Todos los contratos aprobados y activos",
+    "expectedMonth": "Esperado este mes",
+    "expectedMonthHint": "Contratos activos que cruzan el mes actual",
+    "activeContracts": "Contratos activos",
+    "activeContractsHint": "Máquinas generando ingresos ahora",
+    "revenueTrend": "Tendencia de ingresos",
+    "lastSixMonths": "Últimos 6 meses",
+    "revenueTrendAria": "Gráfico de tendencia de ingresos de los últimos seis meses",
+    "transactionHistory": "Historial de transacciones",
+    "transactionsCount": "{count} contratos aprobados",
+    "noTransactions": "Aún no hay alquileres aprobados para mostrar.",
+    "colStartDate": "Fecha de inicio",
+    "colMachine": "Máquina",
+    "colClient": "Cliente",
+    "colAmount": "Monto total",
+    "colStatus": "Estado",
+    "statusInvoicing": "Facturando",
+    "statusPaid": "Pagado",
+    "downloadInvoice": "Descargar factura"
+  },
   "home": {
     "title": "Bienvenido a MineTrack",
     "subtitle": "Plataforma B2B para el alquiler de maquinaria minera pesada."

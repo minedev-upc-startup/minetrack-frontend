@@ -16,6 +16,7 @@ const ownerMachinesView = () => import('./equipment/presentation/views/owner-mac
 const profileView = () => import('./shared/presentation/views/profile-view.vue');
 const clientRequestsView = () => import('./rentals/presentation/views/client-requests-view.vue');
 const ownerRentalsView = () => import('./rentals/presentation/views/owner-rentals-view.vue');
+const ownerEarningsView = () => import('./rentals/presentation/views/owner-earnings-view.vue');
 const dashboardOverview = () => import('./dashboard/presentation/views/dashboard-overview.vue');
 
 const dashboardMeta = (roles, titleKey, extra = {}) => ({
@@ -75,7 +76,7 @@ const routes = [
     {
         path: '/owner/earnings',
         name: 'owner-earnings',
-        component: comingSoon,
+        component: ownerEarningsView,
         meta: dashboardMeta(['Owner'], 'nav.ownerEarnings')
     },
     {

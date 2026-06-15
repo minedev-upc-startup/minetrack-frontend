@@ -217,7 +217,7 @@
       "year": 2021,
       "hourlyRate": 165,
       "dailyMinimumHours": 8,
-      "status": "Available",
+      "status": "Rented",
       "photos": [
         "/seed/machines/komatsu-pc210.jpg"
       ],

@@ -125,6 +125,32 @@
     "viewIotStatus": "View IoT status",
     "dateRange": "{start} → {end}"
   },
+  "earnings": {
+    "title": "Financial earnings",
+    "intro": "Live revenue insights calculated from your approved and active rental contracts.",
+    "liveData": "Live from rentals store",
+    "loading": "Loading financial data...",
+    "totalGross": "Total gross earnings",
+    "totalGrossHint": "All approved and active contracts",
+    "expectedMonth": "Expected this month",
+    "expectedMonthHint": "Active contracts overlapping this month",
+    "activeContracts": "Active contracts",
+    "activeContractsHint": "Machines generating revenue now",
+    "revenueTrend": "Revenue trend",
+    "lastSixMonths": "Last 6 months",
+    "revenueTrendAria": "Revenue trend chart for the last six months",
+    "transactionHistory": "Transaction history",
+    "transactionsCount": "{count} approved contracts",
+    "noTransactions": "No approved rentals to display yet.",
+    "colStartDate": "Start date",
+    "colMachine": "Machine",
+    "colClient": "Client",
+    "colAmount": "Total amount",
+    "colStatus": "Status",
+    "statusInvoicing": "Invoicing",
+    "statusPaid": "Paid",
+    "downloadInvoice": "Download invoice"
+  },
   "home": {
     "title": "Welcome to MineTrack",
     "subtitle": "B2B platform for the rental of heavy mining machinery."
