@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import iamRoutes from './iam/presentation/iam-routes.js';
+import maintenanceRoutes from './maintenance/presentation/maintenance-routes.js';
 import { authenticationGuard } from './iam/infrastructure/authentication.guard.js';
 import { roleGuard } from './shared/infrastructure/role-guard.js';
 import i18n from './i18n.js';
@@ -140,13 +141,7 @@ const routes = [
         meta: dashboardMeta(['Intermediary'], 'nav.intermediaryUsers')
     },
 
-    // Maintenance workshop
-    {
-        path: '/maintenance/dashboard',
-        name: 'maintenance-dashboard',
-        component: comingSoon,
-        meta: dashboardMeta(['Maintenance'], 'nav.dashboard')
-    },
+    ...maintenanceRoutes,
 
     { path: '/', redirect: '/home' },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: pageNotFound, meta: { titleKey: 'errors.notFound' } }

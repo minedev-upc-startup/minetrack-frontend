@@ -37,7 +37,7 @@ export function getSidebarItemsForRole(role) {
             ];
         case 'Maintenance':
             return [
-                { labelKey: 'nav.dashboard', routeName: 'maintenance-dashboard', icon: 'pi pi-desktop' }
+                { labelKey: 'nav.iotMonitor', routeName: 'iot-panel', icon: 'pi pi-wifi' }
             ];
         default:
             return [];
@@ -75,7 +75,7 @@ export function getTopNavItemsForRole(role) {
             ];
         case 'Maintenance':
             return [
-                { labelKey: 'nav.dashboard', routeName: 'maintenance-dashboard' }
+                { labelKey: 'nav.iotMonitor', routeName: 'iot-panel' }
             ];
         default:
             return [];
