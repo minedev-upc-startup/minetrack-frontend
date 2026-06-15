@@ -150,8 +150,20 @@ function closeDrawer() {
   drawerVisible.value = false;
 }
 
-async function requestMachine(machine) {
-  const success = await rentals.submitRequest(machine.id, iam.currentUserId, machine.ownerId);
+async function requestMachine(payload) {
+  const { machine, startDate, endDate } = payload;
+  const start = new Date(`${startDate}T00:00:00`);
+  const end = new Date(`${endDate}T00:00:00`);
+  const days = Math.max(1, Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1);
+  const hours = days * (machine.dailyMinimumHours ?? 8);
+  const estimatedTotalCost = hours * (machine.hourlyRate ?? 0);
+
+  const success = await rentals.submitRequest(
+      machine.id,
+      iam.currentUserId,
+      machine.ownerId,
+      { startDate, endDate, estimatedTotalCost }
+  );
   if (success) {
     toast.add({
       severity: 'success',

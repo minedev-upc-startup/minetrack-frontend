@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
@@ -12,10 +12,27 @@ const emit = defineEmits(['close', 'request']);
 
 const { t } = useI18n();
 
+const startDate = ref('');
+const endDate = ref('');
+const dateError = ref('');
+
 const displayName = computed(() => {
   if (!props.machine) return '';
   return `${props.machine.brand} ${props.machine.model}`.trim() || props.machine.name;
 });
+
+watch(
+    () => props.visible,
+    visible => {
+      if (!visible) return;
+      const today = new Date();
+      const nextWeek = new Date(today);
+      nextWeek.setDate(today.getDate() + 7);
+      startDate.value = today.toISOString().split('T')[0];
+      endDate.value = nextWeek.toISOString().split('T')[0];
+      dateError.value = '';
+    }
+);
 
 const photo = computed(() => {
   const path = props.machine?.photos?.[0];
@@ -48,6 +65,24 @@ function machineTypeIcon(type) {
     Tractor: 'pi pi-sliders-h'
   };
   return icons[type] || 'pi pi-wrench';
+}
+
+function submitRequest() {
+  if (!props.machine) return;
+  if (!startDate.value || !endDate.value) {
+    dateError.value = t('equipment.requestDatesRequired');
+    return;
+  }
+  if (endDate.value < startDate.value) {
+    dateError.value = t('equipment.requestDatesInvalid');
+    return;
+  }
+  dateError.value = '';
+  emit('request', {
+    machine: props.machine,
+    startDate: startDate.value,
+    endDate: endDate.value
+  });
 }
 </script>
 
@@ -93,13 +128,28 @@ function machineTypeIcon(type) {
         </dl>
       </section>
 
+      <section v-if="canRequest && machine.status === 'Available'" class="machine-drawer__booking">
+        <h3>{{ t('equipment.requestDatesTitle') }}</h3>
+        <div class="machine-drawer__dates">
+          <label class="machine-drawer__field">
+            <span>{{ t('equipment.startDate') }}</span>
+            <input v-model="startDate" type="date" class="machine-drawer__input">
+          </label>
+          <label class="machine-drawer__field">
+            <span>{{ t('equipment.endDate') }}</span>
+            <input v-model="endDate" type="date" class="machine-drawer__input" :min="startDate">
+          </label>
+        </div>
+        <p v-if="dateError" class="machine-drawer__error">{{ dateError }}</p>
+      </section>
+
       <pv-button
           v-if="canRequest"
           :label="t('equipment.requestRental')"
           icon="pi pi-calendar-plus"
           class="machine-drawer__action"
           :disabled="machine.status !== 'Available'"
-          @click="emit('request', machine)"
+          @click="submitRequest"
       />
       <p v-else-if="machine.status !== 'Available'" class="machine-drawer__hint">
         {{ t('equipment.notAvailableHint') }}
@@ -232,6 +282,45 @@ function machineTypeIcon(type) {
 .machine-drawer__specs h3 {
   margin: 0 0 10px;
   font-size: 15px;
+}
+
+.machine-drawer__booking h3 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  color: #111827;
+}
+
+.machine-drawer__dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.machine-drawer__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.machine-drawer__field span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.machine-drawer__input {
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #111827;
+  background: #ffffff;
+}
+
+.machine-drawer__error {
+  margin: 10px 0 0;
+  color: #b91c1c;
+  font-size: 12px;
 }
 
 .machine-drawer__action {

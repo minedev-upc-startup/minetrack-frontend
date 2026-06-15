@@ -13,6 +13,7 @@ export function getSidebarItemsForRole(role) {
             return [
                 { labelKey: 'nav.clientDashboard', routeName: 'client-dashboard', icon: 'pi pi-home' },
                 { labelKey: 'nav.clientMyRequests', routeName: 'client-my-requests', icon: 'pi pi-inbox' },
+                { labelKey: 'nav.clientMyRentals', routeName: 'client-my-rentals', icon: 'pi pi-truck' },
                 { labelKey: 'nav.catalog', routeName: 'client-catalog', icon: 'pi pi-th-large' }
             ];
         case 'Owner':
@@ -64,7 +65,7 @@ export function getTopNavItemsForRole(role) {
                 { labelKey: 'nav.clientDashboard', routeName: 'client-dashboard' },
                 { labelKey: 'nav.catalog', routeName: 'client-catalog' },
                 { labelKey: 'nav.clientMyRequests', routeName: 'client-my-requests' },
-                { labelKey: 'nav.clientMyRentals', routeName: 'client-my-requests' }
+                { labelKey: 'nav.clientMyRentals', routeName: 'client-my-rentals' }
             ];
         case 'Intermediary':
             return [

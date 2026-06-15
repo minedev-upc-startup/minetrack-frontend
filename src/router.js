@@ -15,6 +15,7 @@ const catalogView = () => import('./equipment/presentation/views/catalog-view.vu
 const ownerMachinesView = () => import('./equipment/presentation/views/owner-machines-view.vue');
 const profileView = () => import('./shared/presentation/views/profile-view.vue');
 const clientRequestsView = () => import('./rentals/presentation/views/client-requests-view.vue');
+const clientRentalsView = () => import('./rentals/presentation/views/client-rentals-view.vue');
 const ownerRentalsView = () => import('./rentals/presentation/views/owner-rentals-view.vue');
 const ownerEarningsView = () => import('./rentals/presentation/views/owner-earnings-view.vue');
 const dashboardOverview = () => import('./dashboard/presentation/views/dashboard-overview.vue');
@@ -46,6 +47,12 @@ const routes = [
         name: 'client-my-requests',
         component: clientRequestsView,
         meta: dashboardMeta(['Client'], 'nav.clientMyRequests')
+    },
+    {
+        path: '/client/my-rentals',
+        name: 'client-my-rentals',
+        component: clientRentalsView,
+        meta: dashboardMeta(['Client'], 'nav.clientMyRentals')
     },
     {
         path: '/client/catalog',

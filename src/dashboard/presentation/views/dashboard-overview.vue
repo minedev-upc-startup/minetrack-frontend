@@ -10,6 +10,7 @@ import useRentalsStore from '../../../rentals/application/rentals.store.js';
 import { DashboardMetric } from '../../domain/model/dashboard-metric.entity.js';
 import { DashboardTableRow } from '../../domain/model/dashboard-table-row.entity.js';
 import { StatusChartPoint } from '../../domain/model/status-chart-point.entity.js';
+import { EarningsPoint } from '../../domain/model/earnings-point.entity.js';
 import { BaseApi } from '../../../shared/infrastructure/base-api.js';
 import { BaseEndpoint } from '../../../shared/infrastructure/base-endpoint.js';
 import KpiCard from '../components/kpi-card.vue';
@@ -47,9 +48,13 @@ const sortDirection = ref('desc');
 const selectedKpi = ref(null);
 const selectedMonthKey = ref(null);
 const ownerDataReady = ref(false);
+const clientDataReady = ref(false);
 const usersById = reactive({});
 
+const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 const isOwnerView = computed(() => currentUserRole.value === 'Owner');
+const isClientView = computed(() => currentUserRole.value === 'Client');
 
 function isActiveRentalStatus(status) {
   const normalized = String(status).toLowerCase();
@@ -58,6 +63,26 @@ function isActiveRentalStatus(status) {
 
 function isPendingStatus(status) {
   return String(status).toLowerCase() === 'pending';
+}
+
+function isCompletedStatus(status) {
+  return String(status).toLowerCase() === 'completed';
+}
+
+function isActiveNow(request) {
+  if (!isActiveRentalStatus(request.status)) return false;
+  if (!request.endDate) return true;
+  return new Date(`${request.endDate}T23:59:59`) >= new Date();
+}
+
+function overlapsCurrentMonth(request) {
+  if (!request.startDate || !request.endDate) return false;
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+  const start = new Date(`${request.startDate}T00:00:00`);
+  const end = new Date(`${request.endDate}T23:59:59`);
+  return start <= monthEnd && end >= monthStart;
 }
 
 function machineCode(machine) {
@@ -203,16 +228,154 @@ const ownerFleetOperational = computed(() =>
     ownerPendingRequests.value.length === 0 && ownerTotalMachines.value > 0
 );
 
-const displayMetrics = computed(() => (isOwnerView.value ? ownerMetrics.value : metrics.value));
-const displayTableRows = computed(() => (isOwnerView.value ? ownerTableRows.value : tableRows.value));
-const displayStatusSeries = computed(() => (isOwnerView.value ? ownerStatusSeries.value : statusSeries.value));
-const displayFleetOperational = computed(() => (isOwnerView.value ? ownerFleetOperational.value : fleetOperational.value));
-const displayTableMode = computed(() => (isOwnerView.value ? 'owner' : tableMode.value));
-const isPageLoading = computed(() => (isOwnerView.value ? !ownerDataReady.value : loading.value));
+const clientActiveRentals = computed(() =>
+    rentalRequests.value.filter(request => isActiveRentalStatus(request.status) && isActiveNow(request))
+);
+
+const clientPendingRequests = computed(() =>
+    rentalRequests.value.filter(request => isPendingStatus(request.status))
+);
+
+const clientMonthlySpend = computed(() =>
+    rentalRequests.value
+        .filter(request => isActiveRentalStatus(request.status) && overlapsCurrentMonth(request))
+        .reduce((sum, request) => sum + estimateRentalTotal(request), 0)
+);
+
+const clientSpendingSeries = computed(() => {
+  const now = new Date();
+  const spendable = rentalRequests.value.filter(request =>
+      isActiveRentalStatus(request.status) || isCompletedStatus(request.status)
+  );
+
+  return Array.from({ length: 6 }, (_, index) => {
+    const offset = 5 - index;
+    const date = new Date(now.getFullYear(), now.getMonth() - offset, 1);
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const total = spendable
+        .filter(request => {
+          const anchor = request.resolvedAt ?? request.startDate;
+          if (!anchor) return false;
+          const parsed = new Date(anchor);
+          return parsed.getMonth() === month && parsed.getFullYear() === year;
+        })
+        .reduce((sum, request) => sum + estimateRentalTotal(request), 0);
+
+    return new EarningsPoint({
+      label: MONTH_LABELS[month],
+      value: Math.round(total / 100) / 10,
+      filterKey: `${year}-${String(month + 1).padStart(2, '0')}`
+    });
+  });
+});
+
+const clientMetrics = computed(() => [
+  new DashboardMetric({
+    id: 1,
+    title: 'dashboard.kpi.monthSpend',
+    value: formatMoney(clientMonthlySpend.value),
+    subtitle: 'dashboard.kpi.clientSpendHint',
+    routeName: 'client-my-rentals'
+  }),
+  new DashboardMetric({
+    id: 2,
+    title: 'dashboard.kpi.activeRentals',
+    value: String(clientActiveRentals.value.length),
+    subtitle: 'dashboard.kpi.clientActiveHint',
+    routeName: 'client-my-rentals'
+  }),
+  new DashboardMetric({
+    id: 3,
+    title: 'dashboard.kpi.pendingRequests',
+    value: String(clientPendingRequests.value.length),
+    subtitle: 'dashboard.kpi.clientPending',
+    subtitleParams: { count: clientPendingRequests.value.length },
+    routeName: 'client-my-requests'
+  })
+]);
+
+const clientTableRows = computed(() => {
+  const machinesMap = machinesByIdMap();
+  return clientActiveRentals.value.map(request => {
+    const machine = machinesMap[request.machineId] ?? {};
+    return new DashboardTableRow({
+      id: request.id,
+      machineCode: machine.id ? machineCode(machine) : `REQ${String(request.id).padStart(3, '0')}`,
+      machineName: machine.brand && machine.model ? `${machine.brand} ${machine.model}` : machine.name ?? '—',
+      clientName: '—',
+      startDate: formatDate(request.startDate),
+      endDate: formatDate(request.endDate),
+      status: 'Active',
+      statusKey: 'dashboard.status.Active',
+      cost: formatMoney(estimateRentalTotal(request)),
+      rowType: 'rental',
+      sortStart: request.startDate,
+      sortEnd: request.endDate,
+      sortCost: estimateRentalTotal(request),
+      linkRoute: 'client-my-rentals',
+      linkParams: {}
+    });
+  });
+});
+
+const clientStatusSeries = computed(() => [
+  new StatusChartPoint({
+    label: 'dashboard.requestStatus.Pending',
+    value: clientPendingRequests.value.length,
+    color: '#f59e0b',
+    filterKey: 'Pending'
+  }),
+  new StatusChartPoint({
+    label: 'dashboard.requestStatus.Approved',
+    value: rentalRequests.value.filter(request => isActiveRentalStatus(request.status)).length,
+    color: '#22c55e',
+    filterKey: 'Approved'
+  }),
+  new StatusChartPoint({
+    label: 'dashboard.requestStatus.Rejected',
+    value: rentalRequests.value.filter(request => String(request.status).toLowerCase() === 'rejected').length,
+    color: '#fb7185',
+    filterKey: 'Rejected'
+  })
+]);
+
+const clientFleetOperational = computed(() => clientPendingRequests.value.length === 0);
+
+const displayMetrics = computed(() => {
+  if (isOwnerView.value) return ownerMetrics.value;
+  if (isClientView.value) return clientMetrics.value;
+  return metrics.value;
+});
+const displayTableRows = computed(() => {
+  if (isOwnerView.value) return ownerTableRows.value;
+  if (isClientView.value) return clientTableRows.value;
+  return tableRows.value;
+});
+const displayStatusSeries = computed(() => {
+  if (isOwnerView.value) return ownerStatusSeries.value;
+  if (isClientView.value) return clientStatusSeries.value;
+  return statusSeries.value;
+});
+const displayFleetOperational = computed(() => {
+  if (isOwnerView.value) return ownerFleetOperational.value;
+  if (isClientView.value) return clientFleetOperational.value;
+  return fleetOperational.value;
+});
+const displayTableMode = computed(() => {
+  if (isOwnerView.value) return 'owner';
+  if (isClientView.value) return 'client';
+  return tableMode.value;
+});
+const isPageLoading = computed(() => {
+  if (isOwnerView.value) return !ownerDataReady.value;
+  if (isClientView.value) return !clientDataReady.value;
+  return loading.value;
+});
 
 const pageTitle = computed(() => {
   if (viewMode.value === 'owner' || isOwnerView.value) return t('dashboard.fleetTitle');
-  if (viewMode.value === 'client') return t('dashboard.clientTitle');
+  if (viewMode.value === 'client' || isClientView.value) return t('dashboard.clientTitle');
   return t('dashboard.operationsTitle');
 });
 
@@ -221,6 +384,9 @@ const statusLabel = computed(() => (
 ));
 
 const visibleChartPoints = computed(() => {
+  if (isClientView.value) {
+    return chartPeriod.value === 12 ? clientSpendingSeries.value : clientSpendingSeries.value.slice(-6);
+  }
   const slice = chartPeriod.value === 12 ? earningsSeries.value : earningsSeries.value.slice(-6);
   return slice;
 });
@@ -229,12 +395,15 @@ const visibleChartTotal = computed(() => {
   if (isOwnerView.value) {
     return formatMoney(ownerMonthlyEarnings.value);
   }
+  if (isClientView.value) {
+    return formatMoney(clientMonthlySpend.value);
+  }
   const total = visibleChartPoints.value.reduce((sum, point) => sum + point.value, 0);
   return `${total.toFixed(1)}k`;
 });
 
 const visibleChartGrowth = computed(() => {
-  if (isOwnerView.value) return null;
+  if (isOwnerView.value || isClientView.value) return null;
   const points = visibleChartPoints.value;
   if (points.length < 2) return null;
   const current = points[points.length - 1].value;
@@ -248,7 +417,9 @@ const filteredRows = computed(() => {
 
   if (tableFilter.value !== 'all') {
     if (displayTableMode.value === 'client') {
-      rows = rows.filter(row => row.status === tableFilter.value);
+      if (tableFilter.value === 'Pending' || tableFilter.value === 'Rejected') {
+        rows = [];
+      }
     } else if (displayTableMode.value === 'intermediary') {
       if (tableFilter.value === 'Pending') {
         rows = rows.filter(row => row.rowType === 'request');
@@ -280,14 +451,22 @@ const filteredRows = computed(() => {
 });
 
 const tableTitle = computed(() => {
-  if (displayTableMode.value === 'client') return t('dashboard.clientRequestsTable');
+  if (displayTableMode.value === 'client') return t('dashboard.clientActiveRentalsTable');
   if (displayTableMode.value === 'intermediary') return t('dashboard.operationsTable');
   return t('dashboard.activeRentalsTable');
 });
 
-const chartTitle = computed(() => (
-  chartPeriod.value === 12 ? t('dashboard.earningsChartTitle12') : t('dashboard.earningsChartTitle')
-));
+const chartTitle = computed(() => {
+  if (isClientView.value) {
+    return chartPeriod.value === 12 ? t('dashboard.spendingChartTitle12') : t('dashboard.spendingChartTitle');
+  }
+  return chartPeriod.value === 12 ? t('dashboard.earningsChartTitle12') : t('dashboard.earningsChartTitle');
+});
+
+const chartCardLabel = computed(() => {
+  if (isClientView.value) return t('dashboard.spendingChartCardTitle');
+  return t('dashboard.chartCardTitle');
+});
 
 const statusChartTitle = computed(() => {
   if (displayTableMode.value === 'client') return t('dashboard.requestsStatusChart');
@@ -329,6 +508,24 @@ async function loadOwnerDashboard() {
   ownerDataReady.value = true;
 }
 
+async function loadClientDashboard() {
+  clientDataReady.value = false;
+  dashboard.viewMode = 'client';
+  dashboard.tableMode = 'client';
+
+  const clientId = currentUserId.value;
+  if (clientId == null) {
+    clientDataReady.value = true;
+    return;
+  }
+
+  await Promise.all([
+    rentals.fetchRequests({ clientId }),
+    equipment.fetchMachines()
+  ]);
+  clientDataReady.value = true;
+}
+
 async function loadDashboard() {
   selectedKpi.value = null;
   selectedMonthKey.value = null;
@@ -339,7 +536,7 @@ async function loadDashboard() {
     return;
   }
   if (currentUserRole.value === 'Client' && currentUserId.value) {
-    await dashboard.fetchClientDashboard(currentUserId.value);
+    await loadClientDashboard();
     return;
   }
   if (currentUserRole.value === 'Intermediary') {
@@ -411,7 +608,7 @@ function clearFilters() {
     </div>
 
     <template v-else>
-      <section class="dashboard-page__kpis">
+      <section class="dashboard-page__kpis" :class="{ 'dashboard-page__kpis--triple': isClientView }">
         <KpiCard
             v-for="metric in displayMetrics"
             :key="metric.id"
@@ -481,7 +678,7 @@ function clearFilters() {
           <div class="dashboard-chart-card">
             <div class="dashboard-chart-card__header">
               <div>
-                <p class="dashboard-chart-card__label">{{ t('dashboard.chartCardTitle') }}</p>
+                <p class="dashboard-chart-card__label">{{ chartCardLabel }}</p>
                 <div class="dashboard-chart-card__stats">
                   <span class="dashboard-chart-card__value">{{ visibleChartTotal }}</span>
                   <span v-if="visibleChartGrowth !== null" class="dashboard-chart-card__growth">
@@ -607,6 +804,10 @@ function clearFilters() {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
+}
+
+.dashboard-page__kpis--triple {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .dashboard-panel {

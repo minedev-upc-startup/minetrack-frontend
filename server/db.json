@@ -192,7 +192,7 @@
       "year": 2022,
       "hourlyRate": 180,
       "dailyMinimumHours": 8,
-      "status": "Rented",
+      "status": "Available",
       "photos": [
         "/seed/machines/cat-320-1.jpg"
       ],
@@ -217,7 +217,7 @@
       "year": 2021,
       "hourlyRate": 165,
       "dailyMinimumHours": 8,
-      "status": "Rented",
+      "status": "Available",
       "photos": [
         "/seed/machines/komatsu-pc210.jpg"
       ],
@@ -239,7 +239,7 @@
       "year": 2023,
       "hourlyRate": 210,
       "dailyMinimumHours": 8,
-      "status": "Rented",
+      "status": "Available",
       "photos": [
         "/seed/machines/volvo-l120.jpg"
       ],
@@ -503,11 +503,11 @@
       "ownerId": 1,
       "startDate": "2026-05-01",
       "endDate": "2026-05-20",
-      "status": "Approved",
+      "status": "Completed",
       "submittedAt": "2026-04-25T09:00:00Z",
       "estimatedTotalCost": 28800,
       "rejectionReason": null,
-      "resolvedAt": "2026-04-28T10:00:00Z"
+      "resolvedAt": "2026-06-15T06:44:41.819Z"
     },
     {
       "id": 5,
@@ -542,11 +542,11 @@
       "ownerId": 4,
       "startDate": "2026-03-01",
       "endDate": "2026-03-15",
-      "status": "Approved",
+      "status": "Completed",
       "submittedAt": "2026-02-22T08:00:00Z",
       "estimatedTotalCost": 27440,
       "rejectionReason": null,
-      "resolvedAt": "2026-02-23T09:30:00Z"
+      "resolvedAt": "2026-06-15T06:44:43.631Z"
     },
     {
       "id": 8,
@@ -567,10 +567,10 @@
       "ownerId": 1,
       "startDate": "2026-05-14",
       "endDate": "2026-12-31",
-      "status": "Approved",
+      "status": "Completed",
       "submittedAt": "2026-05-14T00:28:15.607Z",
       "id": 9,
-      "resolvedAt": "2026-05-14T00:50:19.944Z"
+      "resolvedAt": "2026-06-15T06:44:42.931Z"
     },
     {
       "machineId": 4,
@@ -588,10 +588,33 @@
       "ownerId": 1,
       "startDate": "2026-06-15",
       "endDate": "2026-12-31",
-      "status": "Approved",
+      "status": "Completed",
       "submittedAt": "2026-06-15T05:55:08.567Z",
       "id": 11,
-      "resolvedAt": "2026-06-15T05:55:30.965Z"
+      "resolvedAt": "2026-06-15T06:44:44.449Z"
+    },
+    {
+      "machineId": 1,
+      "clientId": 5,
+      "ownerId": 1,
+      "startDate": "2026-06-15",
+      "endDate": "2026-06-22",
+      "estimatedTotalCost": 11520,
+      "status": "Approved",
+      "submittedAt": "2026-06-15T06:45:44.556Z",
+      "id": 12,
+      "resolvedAt": "2026-06-15T06:46:54.441Z"
+    },
+    {
+      "machineId": 3,
+      "clientId": 5,
+      "ownerId": 1,
+      "startDate": "2026-06-15",
+      "endDate": "2026-07-01",
+      "estimatedTotalCost": 28560,
+      "status": "Pending",
+      "submittedAt": "2026-06-15T06:46:10.264Z",
+      "id": 13
     }
   ],
   "rentals": [
