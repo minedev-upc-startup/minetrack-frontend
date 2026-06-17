@@ -123,7 +123,6 @@ async function returnMachine(request) {
     <header class="client-rentals__header">
       <div>
         <h1 class="client-rentals__title">{{ t('clientRentals.title') }}</h1>
-        <p class="client-rentals__intro">{{ t('clientRentals.intro') }}</p>
       </div>
       <span class="client-rentals__count">{{ t('clientRentals.activeCount', { count: activeRentals.length }) }}</span>
     </header>
@@ -201,17 +200,10 @@ async function returnMachine(request) {
 }
 
 .client-rentals__title {
-  margin: 0 0 8px;
+  margin: 0;
   font-family: 'Playfair Display', var(--mt-font-display);
   font-size: 34px;
   font-weight: 700;
-}
-
-.client-rentals__intro {
-  margin: 0;
-  color: #94a3b8;
-  font-size: 14px;
-  max-width: 620px;
 }
 
 .client-rentals__count {

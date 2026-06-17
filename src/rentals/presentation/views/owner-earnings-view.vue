@@ -181,7 +181,6 @@ function onDownloadInvoice(row) {
     <header class="earnings-page__header">
       <div>
         <h1 class="earnings-page__title">{{ t('earnings.title') }}</h1>
-        <p class="earnings-page__intro">{{ t('earnings.intro') }}</p>
       </div>
       <div class="earnings-page__pulse">
         <span class="earnings-page__pulse-dot" />
@@ -326,17 +325,10 @@ function onDownloadInvoice(row) {
 }
 
 .earnings-page__title {
-  margin: 0 0 8px;
+  margin: 0;
   font-family: 'Playfair Display', var(--mt-font-display);
   font-size: 34px;
   font-weight: 700;
-}
-
-.earnings-page__intro {
-  margin: 0;
-  color: #94a3b8;
-  font-size: 14px;
-  max-width: 620px;
 }
 
 .earnings-page__pulse {

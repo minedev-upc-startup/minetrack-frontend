@@ -612,9 +612,10 @@
       "startDate": "2026-06-15",
       "endDate": "2026-07-01",
       "estimatedTotalCost": 28560,
-      "status": "Pending",
+      "status": "Approved",
       "submittedAt": "2026-06-15T06:46:10.264Z",
-      "id": 13
+      "id": 13,
+      "resolvedAt": "2026-06-17T03:13:56.048Z"
     }
   ],
   "rentals": [

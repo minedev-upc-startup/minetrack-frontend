@@ -171,7 +171,6 @@ async function rejectRental(id) {
     <header class="owner-rentals__header">
       <div>
         <h1 class="owner-rentals__title">{{ t('rentals.ownerTitle') }}</h1>
-        <p class="owner-rentals__intro">{{ t('rentals.ownerIntro') }}</p>
       </div>
     </header>
 
@@ -331,18 +330,11 @@ async function rejectRental(id) {
 }
 
 .owner-rentals__title {
-  margin: 0 0 8px;
+  margin: 0;
   font-family: 'Playfair Display', var(--mt-font-display);
   font-size: 34px;
   font-weight: 700;
   color: #f8fafc;
-}
-
-.owner-rentals__intro {
-  margin: 0;
-  color: #94a3b8;
-  font-size: 14px;
-  max-width: 620px;
 }
 
 .owner-rentals__tabs {

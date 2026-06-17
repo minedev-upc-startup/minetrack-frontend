@@ -694,7 +694,6 @@ function clearFilters() {
         <article class="dashboard-panel dashboard-panel--chart">
           <div class="dashboard-panel__toolbar">
             <h2 class="dashboard-panel__heading dashboard-panel__heading--serif">{{ statusChartTitle }}</h2>
-            <p class="dashboard-panel__hint">{{ t('dashboard.statusChartHint') }}</p>
           </div>
 
           <div class="dashboard-chart-card">

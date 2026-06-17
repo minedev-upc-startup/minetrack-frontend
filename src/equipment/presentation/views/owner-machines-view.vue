@@ -103,7 +103,6 @@ function onAddMachine() {
     <header class="owner-fleet__header">
       <div class="owner-fleet__heading">
         <h1 class="owner-fleet__title">{{ t('equipment.fleetTitle') }}</h1>
-        <p class="owner-fleet__intro">{{ t('equipment.fleetIntro') }}</p>
         <p v-if="equipment.machinesLoaded" class="owner-fleet__count">
           {{ t('equipment.machinesRegistered', { count: fleetCount }) }}
         </p>
@@ -240,18 +239,11 @@ function onAddMachine() {
 }
 
 .owner-fleet__title {
-  margin: 0 0 8px;
+  margin: 0;
   font-family: 'Playfair Display', var(--mt-font-display);
   font-size: 34px;
   font-weight: 700;
   color: #f8fafc;
-}
-
-.owner-fleet__intro {
-  margin: 0;
-  color: #94a3b8;
-  font-size: 14px;
-  max-width: 560px;
 }
 
 .owner-fleet__count {

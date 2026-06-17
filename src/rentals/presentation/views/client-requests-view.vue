@@ -101,7 +101,6 @@ function estimatedTotal(request) {
     <header class="client-requests__header">
       <div>
         <h1 class="client-requests__title">{{ t('clientRequests.title') }}</h1>
-        <p class="client-requests__intro">{{ t('clientRequests.intro') }}</p>
       </div>
       <span class="client-requests__count">{{ t('clientRequests.total', { count: rentals.requests.length }) }}</span>
     </header>
@@ -175,16 +174,10 @@ function estimatedTotal(request) {
 }
 
 .client-requests__title {
-  margin: 0 0 8px;
+  margin: 0;
   font-family: 'Playfair Display', var(--mt-font-display);
   font-size: 34px;
   font-weight: 700;
-}
-
-.client-requests__intro {
-  margin: 0;
-  color: #94a3b8;
-  font-size: 14px;
 }
 
 .client-requests__count {

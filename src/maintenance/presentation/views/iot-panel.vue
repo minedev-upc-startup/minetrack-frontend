@@ -220,9 +220,7 @@ onUnmounted(() => {
   <section class="iot-command">
     <header class="iot-command__hero">
       <div class="iot-command__hero-copy">
-        <p class="iot-command__eyebrow">{{ t('iotPanel.eyebrow') }}</p>
         <h1 class="iot-command__title">{{ t('iotPanel.title') }}</h1>
-        <p class="iot-command__subtitle">{{ t('iotPanel.subtitle') }}</p>
       </div>
       <div class="iot-command__pulse" aria-hidden="true">
         <span class="iot-command__pulse-ring" />
@@ -357,29 +355,12 @@ onUnmounted(() => {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
 }
 
-.iot-command__eyebrow {
-  margin: 0 0 8px;
-  color: #64b5f6;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 .iot-command__title {
   margin: 0;
   font-family: var(--mt-font-display);
   font-size: clamp(28px, 3vw, 38px);
   font-weight: 700;
   line-height: 1.1;
-}
-
-.iot-command__subtitle {
-  margin: 10px 0 0;
-  max-width: 640px;
-  color: var(--mt-color-text-secondary);
-  font-size: 15px;
-  line-height: 1.5;
 }
 
 .iot-command__pulse {
