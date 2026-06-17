@@ -9,6 +9,7 @@
     "signIn": "Iniciar sesión",
     "signUp": "Registrarse",
     "signOut": "Cerrar sesión",
+    "language": "Idioma",
     "toggleSidebar": "Mostrar u ocultar menú lateral",
     "catalog": "Catálogo",
     "myRentals": "Mis alquileres",
@@ -87,7 +88,6 @@
       "bladeCapacityM3": "Capacidad hoja (m³)"
     },
     "fleetTitle": "Mis máquinas",
-    "fleetIntro": "Gestiona el estado operativo de tu flota. Los cambios de estado se guardan en el servidor simulado.",
     "fleetLoading": "Cargando flota...",
     "fleetEmpty": "Aún no has registrado ninguna máquina.",
     "addNewMachine": "Agregar máquina",
@@ -263,6 +263,31 @@
       "platformActive": "En plataforma",
       "awaitingReview": "Por revisar"
     }
+  },
+  "iotPanel": {
+    "eyebrow": "Taller de mantenimiento",
+    "title": "Centro de Comando IoT",
+    "subtitle": "Telemetría en vivo de las máquinas que los clientes operan ahora. Los sensores se actualizan cada 3 segundos.",
+    "kpiMonitored": "Máquinas monitoreadas",
+    "kpiMonitoredHint": "Contratos de alquiler activos",
+    "kpiCritical": "Alertas críticas",
+    "kpiCriticalHint": "Sensores en zona roja",
+    "kpiDispatched": "Técnicos enviados",
+    "kpiDispatchedHint": "En esta sesión",
+    "loading": "Sincronizando telemetría en vivo…",
+    "emptyTitle": "Sin máquinas en operación",
+    "emptyHint": "Cuando un alquiler pase a estado Active, su tarjeta IoT aparecerá aquí automáticamente.",
+    "live": "En vivo",
+    "stabilized": "Estabilizado",
+    "inOperation": "En operación",
+    "underMaintenance": "En mantenimiento",
+    "engineTemp": "Temperatura del motor",
+    "fuelLevel": "Nivel de combustible",
+    "oilPressure": "Presión de aceite",
+    "dispatchTechnician": "Enviar técnico",
+    "contractId": "Contrato #{id}",
+    "unknownMachine": "Máquina #{id}",
+    "unknownClient": "Cliente desconocido"
   },
   "errors": {
     "occurred": "Ocurrió un error",

@@ -3,11 +3,10 @@ import iamRoutes from './iam/presentation/iam-routes.js';
 import maintenanceRoutes from './maintenance/presentation/maintenance-routes.js';
 import { authenticationGuard } from './iam/infrastructure/authentication.guard.js';
 import { roleGuard } from './shared/infrastructure/role-guard.js';
+import { getSidebarItemsForRole } from './shared/infrastructure/navigation-by-role.js';
 import i18n from './i18n.js';
 import useIamStore from './iam/application/iam.store.js';
 
-const about = () => import('./shared/presentation/views/about.vue');
-const forbidden = () => import('./shared/presentation/views/forbidden.vue');
 const pageNotFound = () => import('./shared/presentation/views/page-not-found.vue');
 const comingSoon = () => import('./shared/presentation/views/coming-soon.vue');
 const catalogView = () => import('./equipment/presentation/views/catalog-view.vue');
@@ -28,10 +27,6 @@ const dashboardMeta = (roles, titleKey, extra = {}) => ({
 });
 
 const routes = [
-    { path: '/home', name: 'home', redirect: { name: 'iam-sign-in' } },
-    { path: '/about', name: 'about', component: about, meta: { titleKey: 'nav.about' } },
-    { path: '/forbidden', name: 'forbidden', component: forbidden, meta: { titleKey: 'errors.forbidden' } },
-
     { path: '/iam', name: 'iam', component: () => import('./iam/presentation/iam-shell.vue'), children: iamRoutes },
 
     // Client
@@ -160,16 +155,25 @@ const router = createRouter({
 });
 
 router.beforeEach(to => {
-    useIamStore().restoreSession();
+    const iam = useIamStore();
+    iam.restoreSession();
+
     const titleKey = to.meta.titleKey;
     const title = titleKey ? i18n.global.t(String(titleKey)) : (to.meta.title ?? '');
     document.title = title ? `MineTrack — ${title}` : 'MineTrack';
+
     if (!authenticationGuard(to)) {
         return { name: 'iam-sign-in', query: { returnTo: to.fullPath } };
     }
+
     if (!roleGuard(to)) {
-        return { name: 'forbidden' };
+        if (!iam.isSignedIn) {
+            return { name: 'iam-sign-in', query: { returnTo: to.fullPath } };
+        }
+        const fallbackRoute = getSidebarItemsForRole(iam.currentUserRole)[0]?.routeName;
+        return fallbackRoute ? { name: fallbackRoute } : { name: 'iam-sign-in' };
     }
+
     return true;
 });
 
