@@ -6,7 +6,6 @@ import { roleGuard } from './shared/infrastructure/role-guard.js';
 import i18n from './i18n.js';
 import useIamStore from './iam/application/iam.store.js';
 
-const home = () => import('./shared/presentation/views/home.vue');
 const about = () => import('./shared/presentation/views/about.vue');
 const forbidden = () => import('./shared/presentation/views/forbidden.vue');
 const pageNotFound = () => import('./shared/presentation/views/page-not-found.vue');
@@ -29,7 +28,7 @@ const dashboardMeta = (roles, titleKey, extra = {}) => ({
 });
 
 const routes = [
-    { path: '/home', name: 'home', component: home, meta: { titleKey: 'nav.home' } },
+    { path: '/home', name: 'home', redirect: { name: 'iam-sign-in' } },
     { path: '/about', name: 'about', component: about, meta: { titleKey: 'nav.about' } },
     { path: '/forbidden', name: 'forbidden', component: forbidden, meta: { titleKey: 'errors.forbidden' } },
 
@@ -151,7 +150,7 @@ const routes = [
 
     ...maintenanceRoutes,
 
-    { path: '/', redirect: '/home' },
+    { path: '/', redirect: { name: 'iam-sign-in' } },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: pageNotFound, meta: { titleKey: 'errors.notFound' } }
 ];
 
