@@ -39,11 +39,13 @@ import i18n from './i18n.js';
 import router from './router.js';
 import pinia from './pinia.js';
 import useIamStore from './iam/application/iam.store.js';
+import useRentalsStore from './rentals/application/rentals.store.js';
 
 const app = createApp(App);
 
 app.use(pinia);
 useIamStore().restoreSession();
+useRentalsStore();
 app.use(router);
 app.use(i18n);
 app.use(PrimeVue, { theme: { preset: Material }, ripple: true });

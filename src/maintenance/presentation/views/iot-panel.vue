@@ -21,7 +21,7 @@ const usersById = reactive({});
 let telemetryTimer = null;
 
 const activeRentals = computed(() =>
-    requests.value.filter(request => String(request.status).toLowerCase() === 'active')
+    requests.value.filter(request => rentals.isOperationalStatus(request.status))
 );
 
 const machinesById = computed(() =>
@@ -51,11 +51,13 @@ function jitter(value, delta, min, max, decimals = 1) {
     return clamp(value + randomInRange(-delta, delta, decimals), min, max);
 }
 
-function createInitialSensors() {
+function createInitialSensors(machineId = 0) {
+    const seed = Number(machineId) || 1;
+    const offset = (seed * 17) % 12;
     return {
-        engineTemp: randomInRange(82, 98),
-        fuelLevel: randomInRange(35, 92, 0),
-        oilPressure: randomInRange(3.2, 5.1)
+        engineTemp: clamp(82 + offset + randomInRange(0, 8), 80, 110),
+        fuelLevel: clamp(40 + ((seed * 13) % 45) + randomInRange(-5, 5, 0), 10, 100),
+        oilPressure: clamp(3.1 + ((seed % 5) * 0.35) + randomInRange(-0.2, 0.2), 1.5, 7)
     };
 }
 
@@ -69,9 +71,15 @@ function createStableSensors() {
 
 function initSensorData() {
     const next = { ...sensorData.value };
+    const activeIds = new Set(activeRentals.value.map(request => request.id));
+
+    for (const key of Object.keys(next)) {
+        if (!activeIds.has(Number(key))) delete next[key];
+    }
+
     activeRentals.value.forEach(request => {
         if (!next[request.id]) {
-            next[request.id] = createInitialSensors();
+            next[request.id] = createInitialSensors(request.machineId);
         }
         if (!operationalState[request.id]) {
             operationalState[request.id] = 'operating';
@@ -87,7 +95,7 @@ function tickTelemetry() {
             next[request.id] = createStableSensors();
             return;
         }
-        const current = next[request.id] ?? createInitialSensors();
+        const current = next[request.id] ?? createInitialSensors(request.machineId);
         next[request.id] = {
             engineTemp: jitter(current.engineTemp, 2.5, 80, 110),
             fuelLevel: jitter(current.fuelLevel, 4, 10, 100, 0),
@@ -198,7 +206,7 @@ async function loadUsers() {
 
 watch(activeRentals, () => {
     initSensorData();
-}, { deep: true });
+}, { deep: true, immediate: true });
 
 onMounted(async () => {
     await Promise.all([
@@ -207,7 +215,9 @@ onMounted(async () => {
         loadUsers()
     ]);
     initSensorData();
-    telemetryTimer = setInterval(tickTelemetry, 3000);
+    if (!telemetryTimer) {
+        telemetryTimer = setInterval(tickTelemetry, 3000);
+    }
     loaded.value = true;
 });
 
