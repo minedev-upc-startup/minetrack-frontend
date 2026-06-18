@@ -70,20 +70,6 @@ const useRentalsStore = defineStore('rentals', () => {
         localStorage.setItem(REQUESTS_STORAGE_KEY, JSON.stringify(requests.value));
     }
 
-    async function fetchRequests(filter = {}) {
-        try {
-            const response = await api.getRequests(filter);
-            const apiData = response.data ?? [];
-            const localSnapshot = requests.value.length ? requests.value : loadPersistedRequests();
-            requests.value = mergeRequestLists(apiData, localSnapshot);
-            persistRequests();
-        } catch (error) {
-            console.error(error);
-            const persisted = loadPersistedRequests();
-            if (persisted.length) requests.value = persisted;
-        }
-    }
-
     /**
      * @param {number} machineId
      * @param {number} clientId
@@ -92,23 +78,41 @@ const useRentalsStore = defineStore('rentals', () => {
      */
     async function submitRequest(machineId, clientId, ownerId, options = {}) {
         try {
-            const newRequest = {
+            const resource = {
                 machineId,
                 clientId,
                 ownerId,
                 startDate: options.startDate ?? new Date().toISOString().split('T')[0],
                 endDate: options.endDate ?? new Date().toISOString().split('T')[0],
-                estimatedTotalCost: options.estimatedTotalCost ?? null,
-                status: 'Pending',
-                submittedAt: new Date().toISOString()
             };
-            const response = await api.createRequest(newRequest);
-            requests.value.push(response.data);
+            const response = await api.createRequest(resource);
+            requests.value.unshift(response.data);
             persistRequests();
             return true;
         } catch (error) {
             console.error(error);
             return false;
+        }
+    }
+
+    async function fetchRequests(filter = {}) {
+        try {
+            let response;
+            if (filter.clientId != null) {
+                response = await api.getRequestsByClient(filter.clientId);
+            } else if (filter.ownerId != null) {
+                response = await api.getRequestsByOwner(filter.ownerId);
+            } else {
+                response = await api.getAllRequests();
+            }
+            const apiData = response.data ?? [];
+            const localSnapshot = requests.value.length ? requests.value : loadPersistedRequests();
+            requests.value = mergeRequestLists(apiData, localSnapshot);
+            persistRequests();
+        } catch (error) {
+            console.error(error);
+            const persisted = loadPersistedRequests();
+            if (persisted.length) requests.value = persisted;
         }
     }
 
@@ -133,22 +137,33 @@ const useRentalsStore = defineStore('rentals', () => {
     }
 
     async function acceptRental(id) {
-        const success = await updateRequestStatus(id, 'Approved');
-        if (!success) return false;
-
-        const index = requests.value.findIndex(r => r.id === id);
-        if (index !== -1) {
-            requests.value[index] = {
-                ...requests.value[index],
-                status: 'Active'
-            };
+        try {
+            const response = await api.approveRequest(id);
+            const index = requests.value.findIndex(r => r.id === id);
+            if (index !== -1) {
+                requests.value[index] = { ...requests.value[index], ...response.data };
+            }
+            persistRequests();
+            return true;
+        } catch (error) {
+            console.error(error);
+            return false;
         }
-        persistRequests();
-        return true;
     }
 
-    async function rejectRental(id) {
-        return updateRequestStatus(id, 'Rejected');
+    async function rejectRental(id, rejectionReason = '') {
+        try {
+            const response = await api.rejectRequest(id, rejectionReason);
+            const index = requests.value.findIndex(r => r.id === id);
+            if (index !== -1) {
+                requests.value[index] = { ...requests.value[index], ...response.data };
+            }
+            persistRequests();
+            return true;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
     }
 
     async function returnMachine(requestId) {
