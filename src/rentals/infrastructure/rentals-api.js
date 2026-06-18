@@ -1,29 +1,33 @@
 import { BaseApi } from '../../shared/infrastructure/base-api.js';
-import { BaseEndpoint } from '../../shared/infrastructure/base-endpoint.js';
+
+const RENTALS_PATH = import.meta.env.VITE_RENTALS_ENDPOINT_PATH;
 
 export class RentalsApi extends BaseApi {
-    #requestsEndpoint;
-
     constructor() {
         super();
-
-        this.#requestsEndpoint = new BaseEndpoint(this, '/rentalRequests');
     }
 
-
-    getRequests(params) {
-        return this.#requestsEndpoint.getAll(params);
+    getAllRequests() {
+        return this.http.get(RENTALS_PATH);
     }
 
+    getRequestsByClient(clientId) {
+        return this.http.get(`/clients/${clientId}/rentals`);
+    }
 
-
+    getRequestsByOwner(ownerId) {
+        return this.http.get(`/owners/${ownerId}/rentals`);
+    }
 
     createRequest(resource) {
-        return this.#requestsEndpoint.create(resource);
+        return this.http.post(RENTALS_PATH, resource);
     }
 
+    approveRequest(id) {
+        return this.http.patch(`${RENTALS_PATH}/${id}/approve`);
+    }
 
-    patchRequest(id, partial) {
-        return this.#requestsEndpoint.patch(id, partial);
+    rejectRequest(id, rejectionReason = '') {
+        return this.http.patch(`${RENTALS_PATH}/${id}/reject`, { rejectionReason });
     }
 }
