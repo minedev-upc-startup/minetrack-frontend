@@ -5,7 +5,8 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import useIamStore from '../../../iam/application/iam.store.js';
 import { persistLocale } from '../../../i18n.js';
-import { getProfileRouteForRole, getTopNavItemsForRole } from '../../infrastructure/navigation-by-role.js';
+import { getProfileRouteForRole } from '../../infrastructure/navigation-by-role.js';
+
 
 const props = defineProps({
   /** When true, shows a hamburger control that collapses the role dashboard sidebar. */
@@ -33,7 +34,6 @@ const localeOptions = [
 ];
 
 const isSignedIn = computed(() => iam.isSignedIn);
-const navItems = computed(() => getTopNavItemsForRole(currentUserRole.value));
 const profileRoute = computed(() => getProfileRouteForRole(currentUserRole.value));
 
 function setLocale(code) {
@@ -61,24 +61,13 @@ const onSignOut = () => {
         @click="$emit('toggle-nav')"
     />
 
-    <router-link :to="navItems[0] ? { name: navItems[0].routeName } : { name: 'iam-sign-in' }" class="topbar__brand">
+    <router-link :to="{ name: 'iam-sign-in' }" class="topbar__brand">
       <svg class="topbar__brand-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
         <path d="M16 2L18.8 12.2L29 15L18.8 17.8L16 28L13.2 17.8L3 15L13.2 12.2L16 2Z" fill="currentColor"/>
       </svg>
       <span>{{ t('app.name') }}</span>
     </router-link>
 
-    <nav v-if="isSignedIn && navItems.length" class="topbar__nav">
-      <router-link
-          v-for="item in navItems"
-          :key="item.routeName"
-          :to="{ name: item.routeName }"
-          class="topbar__nav-link"
-      >
-        {{ t(item.labelKey) }}
-        <i class="pi pi-chevron-down topbar__nav-chevron" />
-      </router-link>
-    </nav>
 
     <div class="topbar__spacer" />
 
