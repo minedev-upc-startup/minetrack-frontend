@@ -4,7 +4,7 @@ import { normalizeAppRole } from './user-role.js';
  * Sidebar navigation items per authenticated role.
  * Each item: { labelKey: i18n key, routeName: vue-router name, icon: PrimeIcons class }
  *
- * @param {unknown} role - "Client" | "Owner" | "Intermediary" (any casing)
+ * @param {unknown} role - "Client" | "Owner" | "Intermediary" | "Maintenance" (any casing)
  * @returns {Array<{ labelKey: string, routeName: string, icon: string }>}
  */
 export function getSidebarItemsForRole(role) {
@@ -13,6 +13,7 @@ export function getSidebarItemsForRole(role) {
             return [
                 { labelKey: 'nav.clientDashboard', routeName: 'client-dashboard', icon: 'pi pi-home' },
                 { labelKey: 'nav.clientMyRequests', routeName: 'client-my-requests', icon: 'pi pi-inbox' },
+                { labelKey: 'nav.clientMyRentals', routeName: 'client-my-rentals', icon: 'pi pi-truck' },
                 { labelKey: 'nav.catalog', routeName: 'client-catalog', icon: 'pi pi-th-large' }
             ];
         case 'Owner':
@@ -34,6 +35,10 @@ export function getSidebarItemsForRole(role) {
                 { labelKey: 'nav.intermediaryAlerts', routeName: 'intermediary-alerts', icon: 'pi pi-bell' },
                 { labelKey: 'nav.intermediaryBilling', routeName: 'intermediary-billing', icon: 'pi pi-credit-card' },
                 { labelKey: 'nav.intermediaryUsers', routeName: 'intermediary-users', icon: 'pi pi-users' }
+            ];
+        case 'Maintenance':
+            return [
+                { labelKey: 'nav.iotMonitor', routeName: 'iot-panel', icon: 'pi pi-wifi' }
             ];
         default:
             return [];
@@ -60,7 +65,7 @@ export function getTopNavItemsForRole(role) {
                 { labelKey: 'nav.clientDashboard', routeName: 'client-dashboard' },
                 { labelKey: 'nav.catalog', routeName: 'client-catalog' },
                 { labelKey: 'nav.clientMyRequests', routeName: 'client-my-requests' },
-                { labelKey: 'nav.clientMyRentals', routeName: 'client-my-requests' }
+                { labelKey: 'nav.clientMyRentals', routeName: 'client-my-rentals' }
             ];
         case 'Intermediary':
             return [
@@ -68,6 +73,10 @@ export function getTopNavItemsForRole(role) {
                 { labelKey: 'nav.intermediaryRequests', routeName: 'intermediary-requests' },
                 { labelKey: 'nav.intermediaryRentals', routeName: 'intermediary-rentals' },
                 { labelKey: 'nav.intermediaryAlerts', routeName: 'intermediary-alerts' }
+            ];
+        case 'Maintenance':
+            return [
+                { labelKey: 'nav.iotMonitor', routeName: 'iot-panel' }
             ];
         default:
             return [];

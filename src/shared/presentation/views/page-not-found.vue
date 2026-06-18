@@ -9,6 +9,6 @@ const router = useRouter();
   <section>
     <h1>404</h1>
     <p>{{ t('errors.notFound') }}</p>
-    <pv-button :label="t('nav.home')" @click="router.push({ name: 'home' })" />
+    <pv-button :label="t('nav.signIn')" @click="router.push({ name: 'iam-sign-in' })" />
   </section>
 </template>

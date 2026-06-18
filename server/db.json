@@ -169,6 +169,16 @@
       "phone": "+51 999 666 666",
       "company": "Flota Demo SAC",
       "createdAt": "2026-05-02T08:00:00Z"
+    },
+    {
+      "id": 18,
+      "email": "techsupport@minetrack.app",
+      "password": "password123",
+      "role": "maintenance",
+      "fullName": "Taller Komatsu",
+      "phone": "+51 987 600 600",
+      "company": "Taller Komatsu SAC",
+      "createdAt": "2026-06-01T08:00:00Z"
     }
   ],
   "machines": [
@@ -493,11 +503,11 @@
       "ownerId": 1,
       "startDate": "2026-05-01",
       "endDate": "2026-05-20",
-      "status": "Approved",
+      "status": "Completed",
       "submittedAt": "2026-04-25T09:00:00Z",
       "estimatedTotalCost": 28800,
       "rejectionReason": null,
-      "resolvedAt": "2026-04-28T10:00:00Z"
+      "resolvedAt": "2026-06-15T06:44:41.819Z"
     },
     {
       "id": 5,
@@ -505,8 +515,8 @@
       "clientId": 9,
       "ownerId": 2,
       "startDate": "2026-04-22",
-      "endDate": "2026-05-12",
-      "status": "Approved",
+      "endDate": "2026-07-15",
+      "status": "Active",
       "submittedAt": "2026-04-18T11:00:00Z",
       "estimatedTotalCost": 47200,
       "rejectionReason": null,
@@ -518,8 +528,8 @@
       "clientId": 6,
       "ownerId": 3,
       "startDate": "2026-04-10",
-      "endDate": "2026-05-10",
-      "status": "Approved",
+      "endDate": "2026-07-20",
+      "status": "Active",
       "submittedAt": "2026-04-05T10:00:00Z",
       "estimatedTotalCost": 115200,
       "rejectionReason": null,
@@ -532,11 +542,11 @@
       "ownerId": 4,
       "startDate": "2026-03-01",
       "endDate": "2026-03-15",
-      "status": "Approved",
+      "status": "Completed",
       "submittedAt": "2026-02-22T08:00:00Z",
       "estimatedTotalCost": 27440,
       "rejectionReason": null,
-      "resolvedAt": "2026-02-23T09:30:00Z"
+      "resolvedAt": "2026-06-15T06:44:43.631Z"
     },
     {
       "id": 8,
@@ -557,10 +567,10 @@
       "ownerId": 1,
       "startDate": "2026-05-14",
       "endDate": "2026-12-31",
-      "status": "Approved",
+      "status": "Completed",
       "submittedAt": "2026-05-14T00:28:15.607Z",
       "id": 9,
-      "resolvedAt": "2026-05-14T00:50:19.944Z"
+      "resolvedAt": "2026-06-15T06:44:42.931Z"
     },
     {
       "machineId": 4,
@@ -571,6 +581,41 @@
       "status": "Pending",
       "submittedAt": "2026-06-09T19:09:12.167Z",
       "id": 10
+    },
+    {
+      "machineId": 3,
+      "clientId": 5,
+      "ownerId": 1,
+      "startDate": "2026-06-15",
+      "endDate": "2026-12-31",
+      "status": "Completed",
+      "submittedAt": "2026-06-15T05:55:08.567Z",
+      "id": 11,
+      "resolvedAt": "2026-06-15T06:44:44.449Z"
+    },
+    {
+      "machineId": 1,
+      "clientId": 5,
+      "ownerId": 1,
+      "startDate": "2026-06-15",
+      "endDate": "2026-06-22",
+      "estimatedTotalCost": 11520,
+      "status": "Completed",
+      "submittedAt": "2026-06-15T06:45:44.556Z",
+      "id": 12,
+      "resolvedAt": "2026-06-17T02:41:24.900Z"
+    },
+    {
+      "machineId": 3,
+      "clientId": 5,
+      "ownerId": 1,
+      "startDate": "2026-06-15",
+      "endDate": "2026-07-01",
+      "estimatedTotalCost": 28560,
+      "status": "Approved",
+      "submittedAt": "2026-06-15T06:46:10.264Z",
+      "id": 13,
+      "resolvedAt": "2026-06-17T03:13:56.048Z"
     }
   ],
   "rentals": [

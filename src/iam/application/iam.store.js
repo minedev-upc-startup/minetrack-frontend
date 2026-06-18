@@ -9,6 +9,9 @@ import { APP_ROLES, normalizeAppRole } from '../../shared/infrastructure/user-ro
 
 const iamApi = new IamApi();
 
+const TOKEN_STORAGE_KEY = 'token';
+const USER_STORAGE_KEY = 'currentUser';
+
 /**
  * Application service store for the IAM bounded context.
  * Exposes UI-facing identity state and authentication use cases.
@@ -20,26 +23,37 @@ const useIamStore = defineStore('iam', () => {
     const currentUserRole    = ref(null);
     const errors             = ref([]);
 
-    const currentToken = computed(() => isSignedIn.value ? localStorage.getItem('token') : null);
+    const currentToken = computed(() => isSignedIn.value ? localStorage.getItem(TOKEN_STORAGE_KEY) : null);
+
+    function clearStoredSession() {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+        localStorage.removeItem(USER_STORAGE_KEY);
+    }
+
+    function clearSessionState() {
+        isSignedIn.value = false;
+        currentUserId.value = null;
+        currentUsername.value = null;
+        currentUserRole.value = null;
+    }
 
     /**
      * Restore a previous session from localStorage on app boot / each navigation.
      * Keeps Pinia in sync before layouts and route guards read the role.
      */
     function restoreSession() {
-        const token = localStorage.getItem('token');
-        const userJson = localStorage.getItem('currentUser');
-        if (!token || !userJson) return;
+        const token = localStorage.getItem(TOKEN_STORAGE_KEY);
+        const userJson = localStorage.getItem(USER_STORAGE_KEY);
+        if (!token || !userJson) {
+            clearSessionState();
+            return;
+        }
         try {
             const user = JSON.parse(userJson);
             const role = normalizeAppRole(user.role);
-            if (!role) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('currentUser');
-                isSignedIn.value = false;
-                currentUserId.value = null;
-                currentUsername.value = null;
-                currentUserRole.value = null;
+            if (!role || !APP_ROLES.includes(role)) {
+                clearStoredSession();
+                clearSessionState();
                 return;
             }
             isSignedIn.value = true;
@@ -47,8 +61,8 @@ const useIamStore = defineStore('iam', () => {
             currentUsername.value = user.fullName ?? user.email;
             currentUserRole.value = role;
         } catch {
-            localStorage.removeItem('token');
-            localStorage.removeItem('currentUser');
+            clearStoredSession();
+            clearSessionState();
         }
     }
 
@@ -78,7 +92,7 @@ const useIamStore = defineStore('iam', () => {
                 router.push(returnTo);
             } else {
                 const first = getSidebarItemsForRole(normalized)[0]?.routeName;
-                router.push(first ? { name: first } : { name: 'home' });
+                router.push(first ? { name: first } : { name: 'iam-sign-in' });
             }
         } catch (error) {
             errors.value.push(error);
@@ -112,19 +126,15 @@ const useIamStore = defineStore('iam', () => {
             const user = UserAssembler.toEntityFromResource(response.data);
             persistSession(user);
             const first = getSidebarItemsForRole(user.role)[0]?.routeName;
-            router.push(first ? { name: first } : { name: 'home' });
+            router.push(first ? { name: first } : { name: 'iam-sign-in' });
         } catch (error) {
             errors.value.push(error);
         }
     }
 
     function signOut() {
-        isSignedIn.value = false;
-        currentUserId.value = null;
-        currentUsername.value = null;
-        currentUserRole.value = null;
-        localStorage.removeItem('token');
-        localStorage.removeItem('currentUser');
+        clearSessionState();
+        clearStoredSession();
     }
 
     /**
@@ -142,8 +152,8 @@ const useIamStore = defineStore('iam', () => {
             company: user.company ?? ''
         };
         const fakeToken = `fake-jwt.${payload.id}.${role}.${Date.now()}`;
-        localStorage.setItem('token', fakeToken);
-        localStorage.setItem('currentUser', JSON.stringify(payload));
+        localStorage.setItem(TOKEN_STORAGE_KEY, fakeToken);
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(payload));
         isSignedIn.value = true;
         currentUserId.value = payload.id;
         currentUsername.value = payload.fullName ?? payload.email;

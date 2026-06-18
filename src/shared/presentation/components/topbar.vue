@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import useIamStore from '../../../iam/application/iam.store.js';
+import { persistLocale } from '../../../i18n.js';
 import { getProfileRouteForRole, getTopNavItemsForRole } from '../../infrastructure/navigation-by-role.js';
 
 const props = defineProps({
@@ -21,14 +22,23 @@ const props = defineProps({
 
 defineEmits(['toggle-nav']);
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const router = useRouter();
 const iam = useIamStore();
 const { currentUserRole } = storeToRefs(iam);
 
+const localeOptions = [
+  { code: 'en', label: 'EN' },
+  { code: 'es', label: 'ES' }
+];
+
 const isSignedIn = computed(() => iam.isSignedIn);
 const navItems = computed(() => getTopNavItemsForRole(currentUserRole.value));
 const profileRoute = computed(() => getProfileRouteForRole(currentUserRole.value));
+
+function setLocale(code) {
+  persistLocale(code);
+}
 
 const onSignOut = () => {
   iam.signOut();
@@ -51,7 +61,7 @@ const onSignOut = () => {
         @click="$emit('toggle-nav')"
     />
 
-    <router-link :to="navItems[0] ? { name: navItems[0].routeName } : { name: 'home' }" class="topbar__brand">
+    <router-link :to="navItems[0] ? { name: navItems[0].routeName } : { name: 'iam-sign-in' }" class="topbar__brand">
       <svg class="topbar__brand-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
         <path d="M16 2L18.8 12.2L29 15L18.8 17.8L16 28L13.2 17.8L3 15L13.2 12.2L16 2Z" fill="currentColor"/>
       </svg>
@@ -73,6 +83,24 @@ const onSignOut = () => {
     <div class="topbar__spacer" />
 
     <div class="topbar__actions">
+      <div
+          class="topbar__locale"
+          role="group"
+          :aria-label="t('nav.language')"
+      >
+        <button
+            v-for="option in localeOptions"
+            :key="option.code"
+            type="button"
+            class="topbar__locale-btn"
+            :class="{ 'topbar__locale-btn--active': locale === option.code }"
+            :aria-pressed="locale === option.code"
+            @click="setLocale(option.code)"
+        >
+          {{ option.label }}
+        </button>
+      </div>
+
       <template v-if="isSignedIn">
         <button type="button" class="topbar__logout" @click="onSignOut">
           {{ t('nav.signOut') }}
@@ -168,6 +196,50 @@ const onSignOut = () => {
   gap: 16px;
 }
 
+.topbar__locale {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.topbar__locale-btn {
+  min-width: 42px;
+  height: 32px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #94a3b8;
+  font-family: var(--mt-font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.topbar__locale-btn:hover {
+  color: #e2e8f0;
+}
+
+.topbar__locale-btn--active {
+  background: var(--mt-color-primary);
+  color: var(--mt-color-text-on-primary);
+  box-shadow: 0 4px 14px rgba(245, 166, 35, 0.28);
+}
+
+.topbar__locale-btn--active:hover {
+  color: var(--mt-color-text-on-primary);
+}
+
 .topbar__logout {
   border: none;
   background: transparent;
@@ -229,6 +301,19 @@ const onSignOut = () => {
 }
 
 .topbar--light .topbar__logout:hover {
+  color: #111827;
+}
+
+.topbar--light .topbar__locale {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+}
+
+.topbar--light .topbar__locale-btn {
+  color: #6b7280;
+}
+
+.topbar--light .topbar__locale-btn:hover {
   color: #111827;
 }
 

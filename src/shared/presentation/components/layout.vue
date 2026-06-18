@@ -24,13 +24,12 @@ const onSignOut = () => {
 <template>
   <div class="app-shell">
     <header class="app-shell__topbar">
-      <router-link :to="{ name: 'home' }" class="app-shell__brand">
+      <router-link :to="{ name: 'iam-sign-in' }" class="app-shell__brand">
         {{ t('app.name') }}
       </router-link>
 
       <nav class="app-shell__nav">
-        <router-link :to="{ name: 'home' }">{{ t('nav.home') }}</router-link>
-        <router-link :to="{ name: 'about' }">{{ t('nav.about') }}</router-link>
+        <router-link :to="{ name: 'iam-sign-in' }">{{ t('nav.signIn') }}</router-link>
       </nav>
 
       <div class="app-shell__actions">

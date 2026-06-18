@@ -1,20 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import iamRoutes from './iam/presentation/iam-routes.js';
+import maintenanceRoutes from './maintenance/presentation/maintenance-routes.js';
 import { authenticationGuard } from './iam/infrastructure/authentication.guard.js';
 import { roleGuard } from './shared/infrastructure/role-guard.js';
+import { getSidebarItemsForRole } from './shared/infrastructure/navigation-by-role.js';
 import i18n from './i18n.js';
 import useIamStore from './iam/application/iam.store.js';
 
-const home = () => import('./shared/presentation/views/home.vue');
-const about = () => import('./shared/presentation/views/about.vue');
-const forbidden = () => import('./shared/presentation/views/forbidden.vue');
 const pageNotFound = () => import('./shared/presentation/views/page-not-found.vue');
 const comingSoon = () => import('./shared/presentation/views/coming-soon.vue');
 const catalogView = () => import('./equipment/presentation/views/catalog-view.vue');
 const ownerMachinesView = () => import('./equipment/presentation/views/owner-machines-view.vue');
 const profileView = () => import('./shared/presentation/views/profile-view.vue');
 const clientRequestsView = () => import('./rentals/presentation/views/client-requests-view.vue');
+const clientRentalsView = () => import('./rentals/presentation/views/client-rentals-view.vue');
 const ownerRentalsView = () => import('./rentals/presentation/views/owner-rentals-view.vue');
+const ownerEarningsView = () => import('./rentals/presentation/views/owner-earnings-view.vue');
 const dashboardOverview = () => import('./dashboard/presentation/views/dashboard-overview.vue');
 
 const dashboardMeta = (roles, titleKey, extra = {}) => ({
@@ -26,10 +27,6 @@ const dashboardMeta = (roles, titleKey, extra = {}) => ({
 });
 
 const routes = [
-    { path: '/home', name: 'home', component: home, meta: { titleKey: 'nav.home' } },
-    { path: '/about', name: 'about', component: about, meta: { titleKey: 'nav.about' } },
-    { path: '/forbidden', name: 'forbidden', component: forbidden, meta: { titleKey: 'errors.forbidden' } },
-
     { path: '/iam', name: 'iam', component: () => import('./iam/presentation/iam-shell.vue'), children: iamRoutes },
 
     // Client
@@ -44,6 +41,12 @@ const routes = [
         name: 'client-my-requests',
         component: clientRequestsView,
         meta: dashboardMeta(['Client'], 'nav.clientMyRequests')
+    },
+    {
+        path: '/client/my-rentals',
+        name: 'client-my-rentals',
+        component: clientRentalsView,
+        meta: dashboardMeta(['Client'], 'nav.clientMyRentals')
     },
     {
         path: '/client/catalog',
@@ -74,7 +77,7 @@ const routes = [
     {
         path: '/owner/earnings',
         name: 'owner-earnings',
-        component: comingSoon,
+        component: ownerEarningsView,
         meta: dashboardMeta(['Owner'], 'nav.ownerEarnings')
     },
     {
@@ -140,7 +143,9 @@ const routes = [
         meta: dashboardMeta(['Intermediary'], 'nav.intermediaryUsers')
     },
 
-    { path: '/', redirect: '/home' },
+    ...maintenanceRoutes,
+
+    { path: '/', redirect: { name: 'iam-sign-in' } },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: pageNotFound, meta: { titleKey: 'errors.notFound' } }
 ];
 
@@ -150,16 +155,25 @@ const router = createRouter({
 });
 
 router.beforeEach(to => {
-    useIamStore().restoreSession();
+    const iam = useIamStore();
+    iam.restoreSession();
+
     const titleKey = to.meta.titleKey;
     const title = titleKey ? i18n.global.t(String(titleKey)) : (to.meta.title ?? '');
     document.title = title ? `MineTrack — ${title}` : 'MineTrack';
+
     if (!authenticationGuard(to)) {
         return { name: 'iam-sign-in', query: { returnTo: to.fullPath } };
     }
+
     if (!roleGuard(to)) {
-        return { name: 'forbidden' };
+        if (!iam.isSignedIn) {
+            return { name: 'iam-sign-in', query: { returnTo: to.fullPath } };
+        }
+        const fallbackRoute = getSidebarItemsForRole(iam.currentUserRole)[0]?.routeName;
+        return fallbackRoute ? { name: fallbackRoute } : { name: 'iam-sign-in' };
     }
+
     return true;
 });
 

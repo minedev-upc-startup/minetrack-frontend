@@ -38,16 +38,21 @@ import {
 import i18n from './i18n.js';
 import router from './router.js';
 import pinia from './pinia.js';
+import useIamStore from './iam/application/iam.store.js';
+import useRentalsStore from './rentals/application/rentals.store.js';
 
-createApp(App)
-    .use(pinia)
-    .use(router)
-    .use(i18n)
-    .use(PrimeVue, { theme: { preset: Material }, ripple: true })
-    .use(ConfirmationService)
-    .use(DialogService)
-    .use(ToastService)
-    .component('pv-button', Button)
+const app = createApp(App);
+
+app.use(pinia);
+useIamStore().restoreSession();
+useRentalsStore();
+app.use(router);
+app.use(i18n);
+app.use(PrimeVue, { theme: { preset: Material }, ripple: true });
+app.use(ConfirmationService);
+app.use(DialogService);
+app.use(ToastService);
+app.component('pv-button', Button)
     .component('pv-card', Card)
     .component('pv-column', Column)
     .component('pv-confirm-dialog', ConfirmDialog)
