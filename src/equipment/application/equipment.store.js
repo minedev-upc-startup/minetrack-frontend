@@ -49,6 +49,19 @@ const useEquipmentStore = defineStore('equipment', () => {
         }
     }
 
+
+    async function createMachine(resource) {
+        errors.value = [];
+        try {
+            const response = await equipmentApi.createMachine(resource);
+            const created = MachineAssembler.toEntityFromResource(response.data);
+            machines.value.push(created);
+            return created;
+        } catch (e) {
+            errors.value.push(e);
+            throw e;
+        }
+    }
     function reset() {
         machines.value = [];
         machinesLoaded.value = false;
@@ -60,6 +73,7 @@ const useEquipmentStore = defineStore('equipment', () => {
         machinesLoaded,
         errors,
         fetchMachines,
+        createMachine,
         patchMachine,
         reset
     };

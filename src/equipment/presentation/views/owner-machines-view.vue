@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
+import { useRouter} from "vue-router";
 import { useI18n } from 'vue-i18n';
 import useEquipmentStore from '../../application/equipment.store.js';
 import useIamStore from '../../../iam/application/iam.store.js';
@@ -7,6 +8,7 @@ import useIamStore from '../../../iam/application/iam.store.js';
 const { t } = useI18n();
 const equipment = useEquipmentStore();
 const iam = useIamStore();
+const router = useRouter();
 
 const statusEditId = ref(null);
 const pendingStatus = ref(null);
@@ -94,7 +96,7 @@ async function saveStatus(machine) {
 }
 
 function onAddMachine() {
-    // UI placeholder — full create flow will be implemented later.
+  router.push({ name: 'owner-machines-new' });
 }
 </script>
 
