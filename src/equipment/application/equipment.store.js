@@ -14,13 +14,16 @@ const useEquipmentStore = defineStore('equipment', () => {
     const errors = ref([]);
 
     /**
-     * Load machines; pass ownerId to scope fleet to one owner (json-server filter).
+     * Load machines. Pass ownerId to scope the fleet to one owner — this hits
+     * the nested REST route (/owners/{id}/machines), not a query param.
      * @param {{ ownerId?: number }} [filter]
      */
     async function fetchMachines(filter = {}) {
         errors.value = [];
         try {
-            const response = await equipmentApi.getMachines(filter);
+            const response = filter.ownerId != null
+                ? await equipmentApi.getMachinesByOwnerId(filter.ownerId)
+                : await equipmentApi.getMachines();
             machines.value = MachineAssembler.toEntitiesFromListResponse(response);
             machinesLoaded.value = true;
         } catch (e) {
