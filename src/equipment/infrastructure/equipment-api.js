@@ -18,10 +18,20 @@ export class EquipmentApi extends BaseApi {
     }
 
     /**
-     * @param {{ ownerId?: number }} [params]
+     * Returns the full catalog (no filter).
+     * @param {Record<string, unknown>} [params]
      */
     getMachines(params) {
         return this.#machinesEndpoint.getAll(params);
+    }
+
+    /**
+     * Fleet scoped to one owner via the nested REST route (not a query param),
+     * matching the convention already used by RentalsApi.
+     * @param {number|string} ownerId
+     */
+    getMachinesByOwnerId(ownerId) {
+        return this.http.get(`/owners/${ownerId}/machines`);
     }
 
     /**
@@ -29,6 +39,13 @@ export class EquipmentApi extends BaseApi {
      */
     getMachineById(id) {
         return this.#machinesEndpoint.getById(id);
+    }
+
+    /**
+     * @param {Record<string, unknown>} resource
+     */
+    createMachine(resource) {
+        return this.#machinesEndpoint.create(resource);
     }
 
     /**
