@@ -11,6 +11,7 @@ const pageNotFound = () => import('./shared/presentation/views/page-not-found.vu
 const comingSoon = () => import('./shared/presentation/views/coming-soon.vue');
 const catalogView = () => import('./equipment/presentation/views/catalog-view.vue');
 const ownerMachinesView = () => import('./equipment/presentation/views/owner-machines-view.vue');
+const newMachineView = () => import('./equipment/presentation/views/new-machine-view.vue');
 const profileView = () => import('./shared/presentation/views/profile-view.vue');
 const clientRequestsView = () => import('./rentals/presentation/views/client-requests-view.vue');
 const clientRentalsView = () => import('./rentals/presentation/views/client-rentals-view.vue');
@@ -67,6 +68,12 @@ const routes = [
         name: 'owner-machines',
         component: ownerMachinesView,
         meta: dashboardMeta(['Owner'], 'nav.myMachines')
+    },
+    {
+        path: '/owner/machines/new',
+        name: 'owner-machines-new',
+        component: newMachineView,
+        meta: dashboardMeta(['Owner'], 'newMachine.title')
     },
     {
         path: '/owner/active-rentals',
