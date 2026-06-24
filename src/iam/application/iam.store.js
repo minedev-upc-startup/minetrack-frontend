@@ -74,14 +74,26 @@ const useIamStore = defineStore('iam', () => {
     async function signIn(command, router) {
         errors.value = [];
         try {
-            const response = await iamApi.signIn(command);
-
-            const user = UserAssembler.toEntityFromResource(response);
-            persistSession(user, response.token);
-
-            const first = getSidebarItemsForRole(user.role)[0]?.routeName;
-            router.push(first ? { name: first } : { name: 'iam-sign-in' });
-
+            const response = await iamApi.findByEmail(command.email);
+            const matching = response.data.find(u => u.password === command.password);
+            if (!matching) {
+                errors.value.push(new Error('iam.signIn.invalidCredentials'));
+                return;
+            }
+            const normalized = normalizeAppRole(matching.role);
+            if (!normalized || !APP_ROLES.includes(normalized)) {
+                errors.value.push(new Error('iam.signIn.invalidRole'));
+                return;
+            }
+            const user = UserAssembler.toEntityFromResource(matching);
+            persistSession(user);
+            const returnTo = router.currentRoute.value.query.returnTo;
+            if (typeof returnTo === 'string' && returnTo.length > 0) {
+                router.push(returnTo);
+            } else {
+                const first = getSidebarItemsForRole(normalized)[0]?.routeName;
+                router.push(first ? { name: first } : { name: 'iam-sign-in' });
+            }
         } catch (error) {
             errors.value.push(error);
         }
@@ -95,45 +107,57 @@ const useIamStore = defineStore('iam', () => {
     async function signUp(command, router) {
         errors.value = [];
         try {
-            const response = await iamApi.signUp(command);
-
-            const user = UserAssembler.toEntityFromResource(response);
-            persistSession(user, response.token);
-
+            const existing = await iamApi.findByEmail(command.email);
+            if (existing.data.length > 0) {
+                errors.value.push(new Error('iam.signUp.duplicateEmail'));
+                return;
+            }
+            const normalized = normalizeAppRole(command.role);
+            const roleToPersist = normalized && APP_ROLES.includes(normalized) ? normalized : 'Client';
+            const response = await iamApi.createUser({
+                email: command.email,
+                password: command.password,
+                fullName: command.fullName,
+                role: roleToPersist,
+                phone: command.phone,
+                company: command.company,
+                createdAt: new Date().toISOString()
+            });
+            const user = UserAssembler.toEntityFromResource(response.data);
+            persistSession(user);
             const first = getSidebarItemsForRole(user.role)[0]?.routeName;
             router.push(first ? { name: first } : { name: 'iam-sign-in' });
-
         } catch (error) {
             errors.value.push(error);
         }
-    }
-
-    function signOut() {
-        clearSessionState();
-        clearStoredSession();
     }
 
     /**
      * Internal — write session state and a synthesized fake JWT to localStorage.
      * Replace this with real JWT issuance once the C# backend is in place.
      */
-    function persistSession(user, token) {
+    function persistSession(user) {
         const role = normalizeAppRole(user.role) ?? 'Client';
-
         const payload = {
             id: user.id,
             email: user.email,
             fullName: user.fullName,
-            role
+            role,
+            phone: user.phone ?? '',
+            company: user.company ?? ''
         };
-
-        localStorage.setItem(TOKEN_STORAGE_KEY, token);
+        const fakeToken = `fake-jwt.${payload.id}.${role}.${Date.now()}`;
+        localStorage.setItem(TOKEN_STORAGE_KEY, fakeToken);
         localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(payload));
-
         isSignedIn.value = true;
         currentUserId.value = payload.id;
         currentUsername.value = payload.fullName ?? payload.email;
         currentUserRole.value = role;
+    }
+
+    function signOut() {
+        clearSessionState();
+        clearStoredSession();
     }
 
     return {

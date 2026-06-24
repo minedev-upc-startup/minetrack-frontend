@@ -13,8 +13,7 @@ const SEED_USERS = [
 ];
 
 // In-memory registry for users created during the session via sign-up.
-// NOTE: Temporary until Zahir's IAM bounded context is integrated.
-//       When the C# backend ships, only this class needs to change.
+
 const _runtimeUsers = [];
 let _nextId = 100;
 
