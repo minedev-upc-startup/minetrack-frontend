@@ -25,7 +25,6 @@ function toggleSidebar() {
     <Topbar :show-nav-toggle="!isCatalogShell" @toggle-nav="toggleSidebar" />
     <div class="dashboard-layout__body">
       <DashboardSidebar
-          v-if="!isCatalogShell"
           :items="sidebarItems"
           :collapsed="sidebarCollapsed"
       />

@@ -13,6 +13,7 @@ export class SignUpCommand {
      * @param {string} [params.company='']
      */
     constructor({ email, password, fullName, role, phone = '', company = '' }) {
+        this.username = email;
         this.email = email;
         this.password = password;
         this.fullName = fullName;

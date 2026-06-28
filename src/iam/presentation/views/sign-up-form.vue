@@ -75,8 +75,38 @@ const onSubmit = () => {
 </template>
 
 <style scoped>
-.iam-form { max-width: 480px; margin: var(--mt-space-8) auto; }
-.field { margin-bottom: var(--mt-space-4); display: flex; flex-direction: column; gap: var(--mt-space-1); }
-.iam-form__hint { color: var(--mt-color-text-secondary); font-size: 13px; margin-top: var(--mt-space-4); }
-.iam-form__errors { color: var(--mt-color-status-maintenance); margin-top: var(--mt-space-4); }
+.iam-form {
+  max-width: 480px;
+  margin: var(--mt-space-8) auto;
+  color: #1a1a1a;
+}
+
+.iam-form h1 {
+  color: #1a1a1a;
+  margin-bottom: var(--mt-space-6);
+}
+
+.field {
+  margin-bottom: var(--mt-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mt-space-1);
+}
+
+.field label {
+  color: #1a1a1a !important;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.iam-form__hint {
+  color: #555 !important;
+  font-size: 13px;
+  margin-top: var(--mt-space-4);
+}
+
+.iam-form__errors {
+  color: var(--mt-color-status-maintenance);
+  margin-top: var(--mt-space-4);
+}
 </style>
