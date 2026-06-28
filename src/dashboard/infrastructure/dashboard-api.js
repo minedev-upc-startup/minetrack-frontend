@@ -42,11 +42,10 @@ export class DashboardApi extends BaseApi {
     async getClientOverview(clientId) {
         try {
             const [requestsRes, rentalsRes, machinesRes] = await Promise.all([
-                this.http.get('/rentalRequests', { params: { clientId } }),
-                this.http.get('/rentals', { params: { clientId } }),
+                this.http.get(`/clients/${clientId}/rentals`),
+                this.http.get(`/clients/${clientId}/rentals`),
                 this.http.get('/machines')
             ]);
-
             return {
                 status: 200,
                 data: {
