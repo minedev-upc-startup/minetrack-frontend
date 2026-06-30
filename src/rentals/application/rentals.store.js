@@ -105,14 +105,10 @@ const useRentalsStore = defineStore('rentals', () => {
             } else {
                 response = await api.getAllRequests();
             }
-            const apiData = response.data ?? [];
-            const localSnapshot = requests.value.length ? requests.value : loadPersistedRequests();
-            requests.value = mergeRequestLists(apiData, localSnapshot);
-            persistRequests();
+            requests.value = response.data ?? [];
         } catch (error) {
             console.error(error);
-            const persisted = loadPersistedRequests();
-            if (persisted.length) requests.value = persisted;
+            requests.value = [];
         }
     }
 
